@@ -1,8 +1,9 @@
 """
-wtforms-alchemy
+wtforms-json
 -------------------
 
-Generates WTForms forms from SQLAlchemy models.
+Adds smart json support for WTForms. Useful for when using WTForms with RESTful
+APIs.
 """
 
 from setuptools import setup, Command
@@ -23,13 +24,13 @@ class PyTest(Command):
         raise SystemExit(errno)
 
 setup(
-    name='wtforms-alchemy',
+    name='wtforms-json',
     version='0.1.0',
-    url='https://github.com/kvesteri/wtforms-alchemy',
+    url='https://github.com/kvesteri/wtforms-json',
     license='BSD',
     author='Konsta Vesterinen',
     author_email='konsta@fastmonkeys.com',
-    description='Generates WTForms forms from SQLAlchemy models.',
+    description=__doc__,
     long_description=__doc__,
     packages=['wtforms_json'],
     zip_safe=False,
