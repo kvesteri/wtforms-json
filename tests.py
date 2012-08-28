@@ -6,31 +6,31 @@ from wtforms import (
 )
 from wtforms.validators import Required, Optional
 from wtforms_json import (
-    decode_json,
+    flatten_json,
 )
 
 
 class TestJsonDecoder(object):
     def test_supports_dicts(self):
-        assert decode_json({'a': False, 'b': 123}) == {'b': 123}
+        assert flatten_json({'a': False, 'b': 123}) == {'a': False, 'b': 123}
 
     def test_supports_dicts_with_lists(self):
-        assert decode_json({'a': [1, 2, 3]}) == {'a-0': 1, 'a-1': 2, 'a-2': 3}
+        assert flatten_json({'a': [1, 2, 3]}) == {'a-0': 1, 'a-1': 2, 'a-2': 3}
 
     def test_supports_nested_dicts_and_lists(self):
         data = {
             'a': [{'b': True}]
         }
-        assert decode_json(data) == {'a-0-b': True}
+        assert flatten_json(data) == {'a-0-b': True}
 
     def test_supports_empty_lists(self):
         data = {
             'a': []
         }
-        assert decode_json(data) == {}
+        assert flatten_json(data) == {}
 
     def test_flatten_dict(self):
-        assert decode_json({'a': {'b': {'c': 'd'}}}) == {'a-b-c': 'd'}
+        assert flatten_json({'a': {'b': {'c': 'd'}}}) == {'a-b-c': 'd'}
 
 
 class MultiDict(dict):
@@ -80,5 +80,5 @@ class TestFormPatchData(object):
                 'name': 'some location'
             }
         }
-        form = EventForm(MultiDict(decode_json(json)))
+        form = EventForm(MultiDict(flatten_json(json)))
         assert form.patch_data == json

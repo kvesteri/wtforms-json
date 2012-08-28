@@ -5,30 +5,28 @@ from wtforms.fields import BooleanField, Field, FormField, _unset_value
 from wtforms.validators import Optional, Required
 
 
-def decode_json(json, parent_key='', separator='-'):
+def flatten_json(json, parent_key='', separator='-'):
     items = []
     for key, value in json.items():
-        if value is False:
-            continue
         new_key = parent_key + separator + key if parent_key else key
         if isinstance(value, collections.MutableMapping):
-            items.extend(decode_json(value, new_key).items())
+            items.extend(flatten_json(value, new_key).items())
         elif isinstance(value, list):
-            items.extend(decode_json_list(value, new_key))
+            items.extend(flatten_json_list(value, new_key))
         else:
             items.append((new_key, value))
     return dict(items)
 
 
-def decode_json_list(json, parent_key='', separator='-'):
+def flatten_json_list(json, parent_key='', separator='-'):
     items = []
     i = 0
     for item in json:
         new_key = parent_key + separator + str(i)
         if isinstance(item, list):
-            items.extend(decode_json_list(item, new_key, separator))
+            items.extend(flatten_json_list(item, new_key, separator))
         elif isinstance(item, dict):
-            items.extend(decode_json(item, new_key, separator).items())
+            items.extend(flatten_json(item, new_key, separator).items())
         else:
             items.append((new_key, item))
         i += 1
