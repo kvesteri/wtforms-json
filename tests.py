@@ -1,0 +1,84 @@
+from wtforms import (
+    BooleanField,
+    FormField,
+    TextField,
+    Form,
+)
+from wtforms.validators import Required, Optional
+from wtforms_json import (
+    decode_json,
+)
+
+
+class TestJsonDecoder(object):
+    def test_supports_dicts(self):
+        assert decode_json({'a': False, 'b': 123}) == {'b': 123}
+
+    def test_supports_dicts_with_lists(self):
+        assert decode_json({'a': [1, 2, 3]}) == {'a-0': 1, 'a-1': 2, 'a-2': 3}
+
+    def test_supports_nested_dicts_and_lists(self):
+        data = {
+            'a': [{'b': True}]
+        }
+        assert decode_json(data) == {'a-0-b': True}
+
+    def test_supports_empty_lists(self):
+        data = {
+            'a': []
+        }
+        assert decode_json(data) == {}
+
+    def test_flatten_dict(self):
+        assert decode_json({'a': {'b': {'c': 'd'}}}) == {'a-b-c': 'd'}
+
+
+class MultiDict(dict):
+    def getlist(self, key):
+        return [self[key]]
+
+
+class BooleanTestForm(Form):
+    is_active = BooleanField(default=False, validators=[Optional()])
+    is_confirmed = BooleanField(default=True, validators=[Required()])
+    is_private = BooleanField(default=False, validators=[Required()])
+
+
+class TestPatchedBooleans(object):
+    def test_supports_false_values(self):
+        form = BooleanTestForm(MultiDict(
+            {'is_active': False, 'is_confirmed': True}
+        ))
+        assert form.patch_data == {
+            'is_active': False,
+            'is_confirmed': True,
+            'is_private': False
+        }
+
+
+class LocationForm(Form):
+    name = TextField()
+
+
+class EventForm(Form):
+    name = TextField()
+    location = FormField(LocationForm)
+
+
+class TestFormPatchData(object):
+    def test_patch_data_with_missing_form_fields(self):
+        json = {
+            'name': 'some patched name'
+        }
+        form = EventForm(MultiDict(json))
+        assert form.patch_data == json
+
+    def test_patch_data_for_form_fields(self):
+        json = {
+            'name': 'some name',
+            'location': {
+                'name': 'some location'
+            }
+        }
+        form = EventForm(MultiDict(decode_json(json)))
+        assert form.patch_data == json
