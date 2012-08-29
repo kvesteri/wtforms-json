@@ -1,6 +1,7 @@
 from wtforms import (
     BooleanField,
     FormField,
+    IntegerField,
     TextField,
     Form,
 )
@@ -61,6 +62,8 @@ class TestPatchedBooleans(object):
 
 class LocationForm(Form):
     name = TextField()
+    longitude = IntegerField()
+    latitude = IntegerField()
 
 
 class EventForm(Form):

@@ -56,7 +56,11 @@ def patch_data(self):
                 continue
             elif not is_required(f) and f.default is None:
                 continue
-        data[name] = f.data
+
+        if isinstance(f, FormField):
+            data[name] = f.patch_data
+        else:
+            data[name] = f.data
     return data
 
 
