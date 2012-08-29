@@ -10,6 +10,8 @@ What does it do?
 
 - Adds support for None type FormField values
 
+- Adds support for None type Field values
+
 - Support for missing values with patch_data Form property
 
 - Function for converting JSON data into dict that WTForms understands (flatten_dict function)

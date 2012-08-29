@@ -5,7 +5,7 @@ from wtforms import (
     TextField,
     Form,
 )
-from wtforms.validators import Required, Optional
+from wtforms.validators import AnyOf, Required, Optional
 from wtforms_json import (
     flatten_json, init
 )
@@ -69,6 +69,8 @@ class LocationForm(Form):
 class EventForm(Form):
     name = TextField()
     location = FormField(LocationForm)
+    attendees = IntegerField()
+    # type = TextField(validators=[AnyOf(['party', 'other'])], default='party')
 
 
 class TestFormPatchData(object):
@@ -96,3 +98,13 @@ class TestFormPatchData(object):
         }
         form = EventForm(MultiDict(flatten_json(json)))
         assert form.patch_data == json
+
+    def test_supports_null_values_for_regular_fields(self):
+        json = {
+            'name': 'some name',
+            'attendees': None
+        }
+        form = EventForm(MultiDict(flatten_json(json)))
+        assert form.patch_data == json
+
+

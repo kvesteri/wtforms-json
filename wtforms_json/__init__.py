@@ -75,16 +75,22 @@ def monkey_patch_process(func):
     """Monkey patches Form process method to better understand missing values.
     """
     def process(self, formdata, data=_unset_value):
+        call_original_func = True
         if not isinstance(self, FormField):
             self.is_missing = True
             if formdata:
                 if self.name in formdata:
+                    if len(formdata.getlist(self.name)) == 1:
+                        if formdata[self.name] is None:
+                            call_original_func = False
+                            self.data = None
                     self.is_missing = not bool(formdata.getlist(self.name))
                 else:
                     self.is_missing = True
-        func(self, formdata, data=data)
-        if self.name in formdata and formdata[self.name] is None and \
-                isinstance(self, FormField):
+        if call_original_func:
+            func(self, formdata, data=data)
+        if (self.name in formdata and formdata[self.name] is None and
+                isinstance(self, FormField)):
             self.form._is_missing = False
             self.form._patch_data = None
     return process
