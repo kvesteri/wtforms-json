@@ -3,6 +3,16 @@ WTForms-JSON
 
 WTForms-JSON is a WTForms extension for JSON data handling.
 
+What does it do?
+----------------
+
+- Adds support for real booleans (WTForms doesn't know how to handle False boolean values)
+
+- Support for missing values with patch_data Form property
+
+- Function for converting JSON data into dict that WTForms understands (flatten_dict function)
+
+
 Quickstart
 ----------
 

@@ -6,6 +6,13 @@ from wtforms.validators import Optional, Required
 
 
 def flatten_json(json, parent_key='', separator='-'):
+    """Flattens given JSON dict to cope with WTForms dict structure.
+
+    Examples::
+
+        flatten_json({'a': {'b': 'c'}})
+        >>> {'a-b': 'c'}
+    """
     items = []
     for key, value in json.items():
         new_key = parent_key + separator + key if parent_key else key
