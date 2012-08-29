@@ -1,5 +1,5 @@
 WTForms-JSON
-========================================
+============
 
 WTForms-JSON is a WTForms extension for JSON data handling.
 
@@ -45,12 +45,12 @@ Django's QueryDict).::
 
 
     class LocationForm(Form):
-        name = TextField(validators=[Required()])
+        name = TextField()
         address = TextField()
 
 
     class EventForm(Form):
-        name = TextField(validators=[Required()])
+        name = TextField()
         is_public = BooleanField()
 
 
@@ -71,9 +71,25 @@ patch request which only post the data that the user actually changed.
 You can get access to the patch data (data that only contains the actually set
 fields or fields that have defaults and are required) with form's patch_data
 property.
-::
 
+Now lets use the forms from the previous example:
+::
+    form.data
+    >>> {
+        'name': 'First Event',
+        'is_public': False,
+        'location': {
+            'name': 'some location',
+            'address': None
+        }
+    }
     form.patch_data
+    >>> {
+        'name': 'First Event',
+        'location': {
+            'name': 'some location',
+        }
+    }
 
 
 Using flatten_dict
