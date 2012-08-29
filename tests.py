@@ -6,8 +6,11 @@ from wtforms import (
 )
 from wtforms.validators import Required, Optional
 from wtforms_json import (
-    flatten_json,
+    flatten_json, init
 )
+
+
+init()
 
 
 class TestJsonDecoder(object):

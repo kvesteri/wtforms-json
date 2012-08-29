@@ -44,7 +44,7 @@ def patch_data(self):
         return Required in [v.__class__ for v in field.validators]
 
     for name, f in self._fields.iteritems():
-        if f.is_unset:
+        if f.is_missing:
             if is_optional(f):
                 continue
             elif not is_required(f) and f.default is None:
@@ -60,28 +60,22 @@ def monkey_patch_process(func):
         if isinstance(self, FormField):
             pass
         else:
-            self.is_unset = True
+            self.is_missing = True
             if formdata:
                 if self.name in formdata:
-                    self.is_unset = not bool(formdata.getlist(self.name))
+                    self.is_missing = not bool(formdata.getlist(self.name))
                 else:
-                    self.is_unset = True
+                    self.is_missing = True
         func(self, formdata, data=data)
     return process
 
 
 @property
-def is_unset(self):
+def is_missing(self):
     for name, field in self._fields.items():
-        if not field.is_unset:
+        if not field.is_missing:
             return False
     return True
-
-
-Form.is_unset = is_unset
-Form.patch_data = patch_data
-Field.process = monkey_patch_process(Field.process)
-FormField.process = monkey_patch_process(FormField.process)
 
 
 def process_formdata(self, valuelist):
@@ -93,4 +87,9 @@ def process_formdata(self, valuelist):
         self.data = bool(valuelist)
 
 
-BooleanField.process_formdata = process_formdata
+def init():
+    Form.is_missing = is_missing
+    Form.patch_data = patch_data
+    Field.process = monkey_patch_process(Field.process)
+    FormField.process = monkey_patch_process(FormField.process)
+    BooleanField.process_formdata = process_formdata
