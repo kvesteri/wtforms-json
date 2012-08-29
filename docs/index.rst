@@ -6,7 +6,9 @@ WTForms-JSON is a WTForms extension for JSON data handling.
 What does it do?
 ----------------
 
-- Adds support for real booleans (WTForms doesn't know how to handle False boolean values)
+- Adds support for booleans (WTForms doesn't know how to handle False boolean values)
+
+- Adds support for None type FormField values
 
 - Support for missing values with patch_data Form property
 

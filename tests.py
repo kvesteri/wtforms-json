@@ -88,3 +88,11 @@ class TestFormPatchData(object):
         }
         form = EventForm(MultiDict(flatten_json(json)))
         assert form.patch_data == json
+
+    def test_supports_null_values_for_form_fields(self):
+        json = {
+            'name': 'some name',
+            'location': None
+        }
+        form = EventForm(MultiDict(flatten_json(json)))
+        assert form.patch_data == json

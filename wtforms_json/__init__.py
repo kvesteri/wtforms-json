@@ -8,6 +8,10 @@ from wtforms.validators import Optional, Required
 def flatten_json(json, parent_key='', separator='-'):
     """Flattens given JSON dict to cope with WTForms dict structure.
 
+    :param json: json to be converted into flat WTForms style dict
+    :param parent_key: this argument is used internally be recursive calls
+    :param separator: default separator
+
     Examples::
 
         flatten_json({'a': {'b': 'c'}})
@@ -42,6 +46,9 @@ def flatten_json_list(json, parent_key='', separator='-'):
 
 @property
 def patch_data(self):
+    if hasattr(self, '_patch_data'):
+        return self._patch_data
+
     data = {}
 
     def is_optional(field):
@@ -68,9 +75,7 @@ def monkey_patch_process(func):
     """Monkey patches Form process method to better understand missing values.
     """
     def process(self, formdata, data=_unset_value):
-        if isinstance(self, FormField):
-            pass
-        else:
+        if not isinstance(self, FormField):
             self.is_missing = True
             if formdata:
                 if self.name in formdata:
@@ -78,11 +83,18 @@ def monkey_patch_process(func):
                 else:
                     self.is_missing = True
         func(self, formdata, data=data)
+        if self.name in formdata and formdata[self.name] is None and \
+                isinstance(self, FormField):
+            self.form._is_missing = False
+            self.form._patch_data = None
     return process
 
 
 @property
 def is_missing(self):
+    if hasattr(self, '_is_missing'):
+        return self._is_missing
+
     for name, field in self._fields.items():
         if not field.is_missing:
             return False
