@@ -89,7 +89,8 @@ def monkey_patch_process(func):
                     self.is_missing = True
         if call_original_func:
             func(self, formdata, data=data)
-        if (self.name in formdata and formdata[self.name] is None and
+        if (formdata and self.name in formdata and
+                formdata[self.name] is None and
                 isinstance(self, FormField)):
             self.form._is_missing = False
             self.form._patch_data = None
