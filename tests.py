@@ -5,7 +5,7 @@ from wtforms import (
     TextField,
     Form,
 )
-from wtforms.validators import AnyOf, Required, Optional
+from wtforms.validators import Required, Optional
 from wtforms_json import (
     flatten_json, init
 )
@@ -37,11 +37,6 @@ class TestJsonDecoder(object):
         assert flatten_json({'a': {'b': {'c': 'd'}}}) == {'a-b-c': 'd'}
 
 
-class MultiDict(dict):
-    def getlist(self, key):
-        return [self[key]]
-
-
 class BooleanTestForm(Form):
     is_active = BooleanField(default=False, validators=[Optional()])
     is_confirmed = BooleanField(default=True, validators=[Required()])
@@ -50,9 +45,9 @@ class BooleanTestForm(Form):
 
 class TestPatchedBooleans(object):
     def test_supports_false_values(self):
-        form = BooleanTestForm(MultiDict(
+        form = BooleanTestForm.from_json(
             {'is_active': False, 'is_confirmed': True}
-        ))
+        )
         assert form.patch_data == {
             'is_active': False,
             'is_confirmed': True,
@@ -78,7 +73,7 @@ class TestFormPatchData(object):
         json = {
             'name': 'some patched name'
         }
-        form = EventForm(MultiDict(json))
+        form = EventForm.from_json(json)
         assert form.patch_data == json
 
     def test_patch_data_for_form_fields(self):
@@ -88,7 +83,7 @@ class TestFormPatchData(object):
                 'name': 'some location'
             }
         }
-        form = EventForm(MultiDict(flatten_json(json)))
+        form = EventForm.from_json(json)
         assert form.patch_data == json
 
     def test_supports_null_values_for_form_fields(self):
@@ -96,7 +91,7 @@ class TestFormPatchData(object):
             'name': 'some name',
             'location': None
         }
-        form = EventForm(MultiDict(flatten_json(json)))
+        form = EventForm.from_json(json)
         assert form.patch_data == json
 
     def test_supports_null_values_for_regular_fields(self):
@@ -104,7 +99,5 @@ class TestFormPatchData(object):
             'name': 'some name',
             'attendees': None
         }
-        form = EventForm(MultiDict(flatten_json(json)))
+        form = EventForm.from_json(json)
         assert form.patch_data == json
-
-

@@ -97,6 +97,16 @@ def monkey_patch_process(func):
     return process
 
 
+class MultiDict(dict):
+    def getlist(self, key):
+        return [self[key]]
+
+
+@classmethod
+def from_json(cls, formdata=None, obj=None, **kwargs):
+    return cls(MultiDict(flatten_json(formdata)), obj, **kwargs)
+
+
 @property
 def is_missing(self):
     if hasattr(self, '_is_missing'):
@@ -120,6 +130,7 @@ def process_formdata(self, valuelist):
 def init():
     Form.is_missing = is_missing
     Form.patch_data = patch_data
+    Form.from_json = from_json
     Field.process = monkey_patch_process(Field.process)
     FormField.process = monkey_patch_process(FormField.process)
     BooleanField.process_formdata = process_formdata

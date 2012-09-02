@@ -33,9 +33,7 @@ First Example
 -------------
 
 After the extension has been initialized we can create an ordinary WTForms
-form. Notice we are using MultiDict from werkzeug.datastructures. We could be
-using any MultiDict like object which has getlist() method (for example
-Django's QueryDict).::
+form. Notice how we are initalizing the form using from_json classmethod::
 
 
     from wtforms import Form
@@ -59,7 +57,7 @@ Django's QueryDict).::
         'location': {'name': 'some location'},
     }
 
-    form = MyForm(MultiDict(flatten_json(json)))
+    form = MyForm.from_json(json)
 
 Using patch_data
 ----------------
@@ -92,10 +90,10 @@ Now lets use the forms from the previous example:
     }
 
 
-Using flatten_dict
-------------------
+Internals
+---------
 
-WTForms uses special flattened dict as a data parameter for forms. WTForms-JSON
+WTForm uses special flattened dict as a data parameter for forms. WTForms-JSON
 provides a method for converting JSON into this format.
 ::
 
