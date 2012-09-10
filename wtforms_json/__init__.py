@@ -72,7 +72,8 @@ def patch_data(self):
 
 
 def monkey_patch_process(func):
-    """Monkey patches Form process method to better understand missing values.
+    """
+    Monkey patches Form.process method to better understand missing values.
     """
     def process(self, formdata, data=_unset_value):
         call_original_func = True
@@ -81,7 +82,7 @@ def monkey_patch_process(func):
             if formdata:
                 if self.name in formdata:
                     if len(formdata.getlist(self.name)) == 1:
-                        if formdata[self.name] is None:
+                        if formdata.getlist(self.name) == [None]:
                             call_original_func = False
                             self.data = None
                     self.is_missing = not bool(formdata.getlist(self.name))
@@ -89,8 +90,9 @@ def monkey_patch_process(func):
                     self.is_missing = True
         if call_original_func:
             func(self, formdata, data=data)
+
         if (formdata and self.name in formdata and
-                formdata[self.name] is None and
+                formdata.getlist(self.name) == [None] and
                 isinstance(self, FormField)):
             self.form._is_missing = False
             self.form._patch_data = None
@@ -99,6 +101,9 @@ def monkey_patch_process(func):
 
 class MultiDict(dict):
     def getlist(self, key):
+        return [self[key]]
+
+    def getall(self, key):
         return [self[key]]
 
 

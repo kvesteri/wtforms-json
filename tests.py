@@ -5,9 +5,10 @@ from wtforms import (
     TextField,
     Form,
 )
+from wtforms.form import WebobInputWrapper
 from wtforms.validators import Required, Optional
 from wtforms_json import (
-    flatten_json, init
+    flatten_json, init, MultiDict
 )
 
 
@@ -65,7 +66,15 @@ class EventForm(Form):
     name = TextField()
     location = FormField(LocationForm)
     attendees = IntegerField()
-    # type = TextField(validators=[AnyOf(['party', 'other'])], default='party')
+
+
+class TestFormProcessAfterMonkeyPatch(object):
+    def test_supports_webob_input_wrapper(self):
+        json = {
+            'name': 'some patched name'
+        }
+        form = EventForm(formdata=WebobInputWrapper(MultiDict(json)))
+        assert form.data
 
 
 class TestFormPatchData(object):
