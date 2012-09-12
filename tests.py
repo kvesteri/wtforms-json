@@ -3,6 +3,7 @@ from wtforms import (
     FormField,
     IntegerField,
     TextField,
+    FieldList,
     Form,
 )
 from wtforms.form import WebobInputWrapper
@@ -66,6 +67,7 @@ class EventForm(Form):
     name = TextField()
     location = FormField(LocationForm)
     attendees = IntegerField()
+    attendee_names = FieldList(TextField())
 
 
 class TestFormProcessAfterMonkeyPatch(object):
@@ -91,6 +93,14 @@ class TestFormPatchData(object):
             'location': {
                 'name': 'some location'
             }
+        }
+        form = EventForm.from_json(json)
+        assert form.patch_data == json
+
+    def test_supports_field_lists(self):
+        json = {
+            'name': 'some name',
+            'attendee_names': ['Something']
         }
         form = EventForm.from_json(json)
         assert form.patch_data == json

@@ -1,7 +1,13 @@
 import collections
 
 from wtforms import Form
-from wtforms.fields import BooleanField, Field, FormField, _unset_value
+from wtforms.fields import (
+    BooleanField,
+    Field,
+    FieldList,
+    FormField,
+    _unset_value
+)
 from wtforms.validators import Optional, Required
 
 
@@ -63,6 +69,8 @@ def patch_data(self):
                 continue
             elif not is_required(f) and f.default is None:
                 continue
+            elif isinstance(f, FieldList) and f.min_entries == 0:
+                continue
 
         if isinstance(f, FormField):
             data[name] = f.patch_data
@@ -112,6 +120,23 @@ def from_json(cls, formdata=None, obj=None, **kwargs):
     return cls(MultiDict(flatten_json(formdata)), obj, **kwargs)
 
 
+def boolean_process_formdata(self, valuelist):
+    """This function should overrides BooleanField process_formdata in order
+    to add support for JSON styled boolean False values."""
+    if valuelist and valuelist[0] is False:
+        self.data = False
+    else:
+        self.data = bool(valuelist)
+
+
+def monkey_patch_field_list_process(func):
+    """This function should overrides FieldList process in order to add support
+    for JSON None values."""
+    def process(self, formdata, data=_unset_value):
+        return func(self, formdata, data)
+    return process
+
+
 @property
 def is_missing(self):
     if hasattr(self, '_is_missing'):
@@ -123,19 +148,20 @@ def is_missing(self):
     return True
 
 
-def process_formdata(self, valuelist):
-    """This function should overrides BooleanField process_formdata in order
-    to adds support for JSON styled boolean False values."""
-    if valuelist and valuelist[0] is False:
-        self.data = False
-    else:
-        self.data = bool(valuelist)
+@property
+def field_list_is_missing(self):
+    for field in self.entries:
+        if not field.is_missing:
+            return False
+    return True
 
 
 def init():
     Form.is_missing = is_missing
     Form.patch_data = patch_data
     Form.from_json = from_json
+    FieldList.is_missing = field_list_is_missing
     Field.process = monkey_patch_process(Field.process)
     FormField.process = monkey_patch_process(FormField.process)
-    BooleanField.process_formdata = process_formdata
+    FieldList.process = monkey_patch_field_list_process(FieldList.process)
+    BooleanField.process_formdata = boolean_process_formdata
