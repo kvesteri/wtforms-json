@@ -1,6 +1,6 @@
 """
 wtforms-json
--------------------
+------------
 
 Adds smart json support for WTForms. Useful for when using WTForms with RESTful
 APIs.
@@ -30,7 +30,10 @@ setup(
     license='BSD',
     author='Konsta Vesterinen',
     author_email='konsta@fastmonkeys.com',
-    description=__doc__,
+    description=(
+        'Adds smart json support for WTForms. Useful for when using'
+        ' WTForms with RESTful APIs.'
+    ),
     long_description=__doc__,
     packages=['wtforms_json'],
     zip_safe=False,
