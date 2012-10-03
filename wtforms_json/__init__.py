@@ -8,7 +8,7 @@ from wtforms.fields import (
     FormField,
     _unset_value
 )
-from wtforms.validators import Optional, Required
+from wtforms.validators import Optional, DataRequired
 
 
 def flatten_json(json, parent_key='', separator='-'):
@@ -61,7 +61,7 @@ def patch_data(self):
         return Optional in [v.__class__ for v in field.validators]
 
     def is_required(field):
-        return Required in [v.__class__ for v in field.validators]
+        return DataRequired in [v.__class__ for v in field.validators]
 
     for name, f in self._fields.iteritems():
         if f.is_missing:

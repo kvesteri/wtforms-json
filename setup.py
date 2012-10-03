@@ -37,7 +37,7 @@ setup(
     include_package_data=True,
     platforms='any',
     install_requires=[
-        'WTForms>=1.0.1'
+        'WTForms>=1.0.2'
     ],
     cmdclass={'test': PyTest},
     classifiers=[
