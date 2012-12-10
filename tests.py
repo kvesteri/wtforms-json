@@ -1,3 +1,4 @@
+from pytest import raises
 from wtforms import (
     BooleanField,
     FormField,
@@ -9,7 +10,7 @@ from wtforms import (
 from wtforms.form import WebobInputWrapper
 from wtforms.validators import Required, Optional
 from wtforms_json import (
-    flatten_json, init, MultiDict
+    flatten_json, init, MultiDict, InvalidData
 )
 
 
@@ -17,6 +18,10 @@ init()
 
 
 class TestJsonDecoder(object):
+    def test_raises_error_if_given_data_not_dict_like(self):
+        with raises(InvalidData):
+            flatten_json([])
+
     def test_supports_dicts(self):
         assert flatten_json({'a': False, 'b': 123}) == {'a': False, 'b': 123}
 

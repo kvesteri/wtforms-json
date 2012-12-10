@@ -11,6 +11,10 @@ from wtforms.fields import (
 from wtforms.validators import Optional, DataRequired
 
 
+class InvalidData(Exception):
+    pass
+
+
 def flatten_json(json, parent_key='', separator='-'):
     """Flattens given JSON dict to cope with WTForms dict structure.
 
@@ -23,6 +27,11 @@ def flatten_json(json, parent_key='', separator='-'):
         flatten_json({'a': {'b': 'c'}})
         >>> {'a-b': 'c'}
     """
+    if not isinstance(json, collections.Mapping):
+        raise InvalidData(
+            u'This function only accepts dict-like data structures.'
+        )
+
     items = []
     for key, value in json.items():
         new_key = parent_key + separator + key if parent_key else key
