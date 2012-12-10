@@ -25,7 +25,7 @@ class PyTest(Command):
 
 setup(
     name='wtforms-json',
-    version='0.1.1',
+    version='0.1.2',
     url='https://github.com/kvesteri/wtforms-json',
     license='BSD',
     author='Konsta Vesterinen',
