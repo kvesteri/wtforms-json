@@ -1,5 +1,5 @@
 """
-wtforms-json
+WTForms-JSON
 ------------
 
 Adds smart json support for WTForms. Useful for when using WTForms with RESTful
@@ -24,7 +24,7 @@ class PyTest(Command):
         raise SystemExit(errno)
 
 setup(
-    name='wtforms-json',
+    name='WTForms-JSON',
     version='0.1.2',
     url='https://github.com/kvesteri/wtforms-json',
     license='BSD',
@@ -40,7 +40,7 @@ setup(
     include_package_data=True,
     platforms='any',
     install_requires=[
-        'WTForms>=1.0.2'
+        'WTForms==1.0.2'
     ],
     cmdclass={'test': PyTest},
     classifiers=[
