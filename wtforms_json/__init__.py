@@ -138,14 +138,6 @@ def boolean_process_formdata(self, valuelist):
         self.data = bool(valuelist)
 
 
-# def monkey_patch_field_list_process(func):
-#     """This function overrides FieldList process in order to add support
-#     for JSON None values."""
-#     def process(self, formdata, data=_unset_value):
-#         return func(self, formdata, data)
-#     return process
-
-
 @property
 def is_missing(self):
     if hasattr(self, '_is_missing'):
@@ -172,5 +164,4 @@ def init():
     FieldList.is_missing = field_list_is_missing
     Field.process = monkey_patch_process(Field.process)
     FormField.process = monkey_patch_process(FormField.process)
-    #FieldList.process = monkey_patch_field_list_process(FieldList.process)
     BooleanField.process_formdata = boolean_process_formdata
