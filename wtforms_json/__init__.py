@@ -130,7 +130,7 @@ def from_json(cls, formdata=None, obj=None, **kwargs):
 
 
 def boolean_process_formdata(self, valuelist):
-    """This function should overrides BooleanField process_formdata in order
+    """This function overrides BooleanField process_formdata in order
     to add support for JSON styled boolean False values."""
     if valuelist and valuelist[0] is False:
         self.data = False
@@ -139,7 +139,7 @@ def boolean_process_formdata(self, valuelist):
 
 
 # def monkey_patch_field_list_process(func):
-#     """This function should overrides FieldList process in order to add support
+#     """This function overrides FieldList process in order to add support
 #     for JSON None values."""
 #     def process(self, formdata, data=_unset_value):
 #         return func(self, formdata, data)
