@@ -37,7 +37,7 @@ form. Notice how we are initalizing the form using from_json classmethod. ::
 
 
     from wtforms import Form
-    from wtforms.field import BooleanField, TextField
+    from wtforms.fields import BooleanField, TextField
 
 
     class LocationForm(Form):
@@ -55,7 +55,10 @@ form. Notice how we are initalizing the form using from_json classmethod. ::
         'location': {'name': 'some location'},
     }
 
-    form = MyForm.from_json(json)
+    form = EventForm.from_json(json)
+
+
+Here from_json() takes exactly the same parameters as wtforms Form.__init__().
 
 
 Using patch_data
