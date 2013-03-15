@@ -25,7 +25,7 @@ class PyTest(Command):
 
 setup(
     name='WTForms-JSON',
-    version='0.1.3',
+    version='0.1.4',
     url='https://github.com/kvesteri/wtforms-json',
     license='BSD',
     author='Konsta Vesterinen',
@@ -40,7 +40,7 @@ setup(
     include_package_data=True,
     platforms='any',
     install_requires=[
-        'WTForms==1.0.2'
+        'WTForms>=1.0.2'
     ],
     cmdclass={'test': PyTest},
     classifiers=[
