@@ -1,14 +1,19 @@
 import collections
 
+import six
 from wtforms import Form
 from wtforms.fields import (
     BooleanField,
     Field,
     FieldList,
     FormField,
+    TextField,
     _unset_value
 )
 from wtforms.validators import Optional, DataRequired
+
+
+__version__ = '0.1.5'
 
 
 class InvalidData(Exception):
@@ -113,6 +118,12 @@ def monkey_patch_process(func):
                 isinstance(self, FormField)):
             self.form._is_missing = False
             self.form._patch_data = None
+
+        if isinstance(self, TextField):
+            if self.data is None:
+                self.data = u''
+            else:
+                self.data = six.text_type(self.data)
     return process
 
 

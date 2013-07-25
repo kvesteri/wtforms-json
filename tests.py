@@ -7,6 +7,7 @@ from wtforms import (
     FieldList,
     Form,
 )
+from wtforms.validators import IPAddress
 from wtforms.form import WebobInputWrapper
 from wtforms.validators import Required, Optional
 from wtforms_json import (
@@ -125,3 +126,23 @@ class TestFormPatchData(object):
         }
         form = EventForm.from_json(json)
         assert form.patch_data == json
+
+
+class TestFieldTypeCoercion(object):
+    def test_integer_to_unicode_coercion(self):
+        class NetworkForm(Form):
+            address = TextField('Address', [IPAddress()])
+
+        network = dict(address=123)
+
+        form = NetworkForm.from_json(network)
+        assert not form.validate()
+
+    def test_integer_coercion(self):
+        class UserForm(Form):
+            age = IntegerField('age')
+
+        network = dict(age=123)
+
+        form = UserForm.from_json(network)
+        assert form.validate()

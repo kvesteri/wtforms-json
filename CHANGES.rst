@@ -4,10 +4,17 @@ Changelog
 Here you can see the full list of changes between each WTForms-JSON release.
 
 
+0.1.5 (2013-07-25)
+^^^^^^^^^^^^^^^^^^
+
+- Added enhanced unicode coercion
+- Package six added to requirements
+
+
 0.1.4 (2013-03-16)
 ^^^^^^^^^^^^^^^^^^
 
-- Updated requirements
+- Updated WTForms requirements
 
 
 
