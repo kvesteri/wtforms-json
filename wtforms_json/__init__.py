@@ -151,10 +151,7 @@ def is_missing(self):
 
 @property
 def field_list_is_missing(self):
-    for field in self.entries:
-        if not field.is_missing:
-            return False
-    return True
+    return all([field.is_missing for field in self.entries])
 
 
 def init():
