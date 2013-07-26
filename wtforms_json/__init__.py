@@ -8,19 +8,20 @@ from wtforms.fields import (
     FieldList,
     FormField,
     TextField,
+    SelectMultipleField,
     _unset_value
 )
 from wtforms.validators import Optional, DataRequired
 
 
-__version__ = '0.1.5'
+__version__ = '0.2.0'
 
 
 class InvalidData(Exception):
     pass
 
 
-def flatten_json(json, parent_key='', separator='-'):
+def flatten_json(form, json, parent_key='', separator='-'):
     """Flattens given JSON dict to cope with WTForms dict structure.
 
     :param json: json to be converted into flat WTForms style dict
@@ -39,17 +40,40 @@ def flatten_json(json, parent_key='', separator='-'):
 
     items = []
     for key, value in json.items():
+        try:
+            unbound_field = getattr(form, key)
+        except AttributeError:
+            raise InvalidData(u"Unknown field name '%s'." % key)
+
+        try:
+            field_class = unbound_field.field_class
+        except AttributeError:
+            raise InvalidData(u"Key '%s' is not valid field class." % key)
+
         new_key = parent_key + separator + key if parent_key else key
         if isinstance(value, collections.MutableMapping):
-            items.extend(flatten_json(value, new_key).items())
+            items.extend(
+                flatten_json(unbound_field.args[0], value, new_key)
+                .items()
+            )
         elif isinstance(value, list):
-            items.extend(flatten_json_list(value, new_key))
+            if issubclass(field_class, SelectMultipleField):
+                items.append((new_key, value))
+            else:
+                items.extend(
+                    flatten_json_list(
+                        unbound_field.args[0],
+                        value,
+                        new_key,
+                        separator
+                    )
+                )
         else:
             items.append((new_key, value))
     return dict(items)
 
 
-def flatten_json_list(json, parent_key='', separator='-'):
+def flatten_json_list(field, json, parent_key='', separator='-'):
     items = []
     i = 0
     for item in json:
@@ -57,7 +81,11 @@ def flatten_json_list(json, parent_key='', separator='-'):
         if isinstance(item, list):
             items.extend(flatten_json_list(item, new_key, separator))
         elif isinstance(item, dict):
-            items.extend(flatten_json(item, new_key, separator).items())
+
+            items.extend(
+                flatten_json(field.args[0], item, new_key, separator)
+                .items()
+            )
         else:
             items.append((new_key, item))
         i += 1
@@ -103,19 +131,23 @@ def monkey_patch_process(func):
             self.is_missing = True
             if formdata:
                 if self.name in formdata:
-                    if len(formdata.getlist(self.name)) == 1:
-                        if formdata.getlist(self.name) == [None]:
-                            call_original_func = False
-                            self.data = None
+                    if (
+                        len(formdata.getlist(self.name)) == 1 and
+                        formdata.getlist(self.name) == [None]
+                    ):
+                        call_original_func = False
+                        self.data = None
                     self.is_missing = not bool(formdata.getlist(self.name))
                 else:
                     self.is_missing = True
         if call_original_func:
             func(self, formdata, data=data)
 
-        if (formdata and self.name in formdata and
-                formdata.getlist(self.name) == [None] and
-                isinstance(self, FormField)):
+        if (
+            formdata and self.name in formdata and
+            formdata.getlist(self.name) == [None] and
+            isinstance(self, FormField)
+        ):
             self.form._is_missing = False
             self.form._patch_data = None
 
@@ -129,7 +161,10 @@ def monkey_patch_process(func):
 
 class MultiDict(dict):
     def getlist(self, key):
-        return [self[key]]
+        val = self[key]
+        if not isinstance(val, list):
+            val = [val]
+        return val
 
     def getall(self, key):
         return [self[key]]
@@ -137,7 +172,7 @@ class MultiDict(dict):
 
 @classmethod
 def from_json(cls, formdata=None, obj=None, **kwargs):
-    return cls(MultiDict(flatten_json(formdata)), obj, **kwargs)
+    return cls(MultiDict(flatten_json(cls, formdata)), obj, **kwargs)
 
 
 def boolean_process_formdata(self, valuelist):
