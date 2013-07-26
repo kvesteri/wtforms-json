@@ -30,8 +30,8 @@ def flatten_json(form, json, parent_key='', separator='-'):
 
     Examples::
 
-        flatten_json({'a': {'b': 'c'}})
-        >>> {'a-b': 'c'}
+        >>> flatten_json(MyForm, {'a': {'b': 'c'}})
+        {'a-b': 'c'}
     """
     if not isinstance(json, collections.Mapping):
         raise InvalidData(
