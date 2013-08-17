@@ -57,9 +57,7 @@ def flatten_json(form, json, parent_key='', separator='-'):
                 .items()
             )
         elif isinstance(value, list):
-            if issubclass(field_class, SelectMultipleField):
-                items.append((new_key, value))
-            else:
+            if issubclass(field_class, FieldList):
                 items.extend(
                     flatten_json_list(
                         unbound_field.args[0],
@@ -68,6 +66,8 @@ def flatten_json(form, json, parent_key='', separator='-'):
                         separator
                     )
                 )
+            else:
+                items.append((new_key, value))
         else:
             items.append((new_key, value))
     return dict(items)
