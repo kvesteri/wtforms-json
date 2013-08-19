@@ -4,6 +4,12 @@ Changelog
 Here you can see the full list of changes between each WTForms-JSON release.
 
 
+0.2.1 (2013-08-19)
+^^^^^^^^^^^^^^^^^^
+
+- Custom SelectField support
+
+
 0.2.0 (2013-07-26)
 ^^^^^^^^^^^^^^^^^^
 

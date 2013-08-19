@@ -8,13 +8,12 @@ from wtforms.fields import (
     FieldList,
     FormField,
     TextField,
-    SelectMultipleField,
     _unset_value
 )
 from wtforms.validators import Optional, DataRequired
 
 
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 
 
 class InvalidData(Exception):
