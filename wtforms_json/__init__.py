@@ -20,12 +20,22 @@ class InvalidData(Exception):
     pass
 
 
-def flatten_json(form, json, parent_key='', separator='-'):
+def flatten_json(
+    form,
+    json,
+    parent_key='',
+    separator='-',
+    skip_unknown_keys=True
+):
     """Flattens given JSON dict to cope with WTForms dict structure.
 
+    :form form: WTForms Form object
     :param json: json to be converted into flat WTForms style dict
     :param parent_key: this argument is used internally be recursive calls
     :param separator: default separator
+    :param skip_unknown_keys:
+        if True unknown keys will be skipped, if False throws InvalidData
+        exception whenever unknown key is encountered
 
     Examples::
 
@@ -42,7 +52,10 @@ def flatten_json(form, json, parent_key='', separator='-'):
         try:
             unbound_field = getattr(form, key)
         except AttributeError:
-            raise InvalidData(u"Unknown field name '%s'." % key)
+            if skip_unknown_keys:
+                continue
+            else:
+                raise InvalidData(u"Unknown field name '%s'." % key)
 
         try:
             field_class = unbound_field.field_class

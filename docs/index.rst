@@ -61,6 +61,18 @@ form. Notice how we are initalizing the form using from_json classmethod. ::
 Here from_json() takes exactly the same parameters as wtforms Form.__init__().
 
 
+If you want WTForms-JSON to throw errors when unknown json keys are encountered just pass skip_unknown_fields=False to from_json.
+::
+
+    json = {
+        'some_unknown_key'
+    }
+
+    # Throws exception
+    form = EventForm.from_json(json, skip_unknown_keys=False)
+
+
+
 Using patch_data
 ----------------
 The way forms usually work on websites is that they post all the data within
@@ -100,20 +112,43 @@ WTForm uses special flattened dict as a data parameter for forms. WTForms-JSON
 provides a method for converting JSON into this format. ::
 
 
+    from wtforms import Form
+    from wtforms.fields import FormField, StringField
     from wtforms_json import flatten_dict
+
+
+    class FormB(Form):
+        b = TextField('B')
+
+    class FormA(Form):
+        a = FormField(FormB)
+
 
     flatten_dict({'a': {'b': 'c'}})
     >>> {'a-b': 'c'}
+
 
 This neat little function understands nested lists and dicts as well. ::
 
 
     from wtforms_json import flatten_dict
 
+
+    class FormC(Form):
+        c = IntegerField('C')
+
+
+    class FormB(Form):
+        b = FormField(FormC)
+
+    class FormA(Form):
+        a = FieldList(FormField(FormB))
+
+
     deep_dict = {
-        'a': [{'b': {'c': 1}}, {'c': 2}]
+        'a': [{'b': {'c': 1}}]
     }
 
     flatten_dict(deep_dict)
-    >>> {'a-0-b-c': 1, 'a-1-c': 2}
+    >>> {'a-0-b-c': 1}
 
