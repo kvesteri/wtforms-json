@@ -4,6 +4,12 @@ Changelog
 Here you can see the full list of changes between each WTForms-JSON release.
 
 
+0.2.2 (2013-08-30)
+^^^^^^^^^^^^^^^^^^
+
+- Configurable unknown json key handling
+
+
 0.2.1 (2013-08-19)
 ^^^^^^^^^^^^^^^^^^
 

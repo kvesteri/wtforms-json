@@ -13,7 +13,7 @@ from wtforms.fields import (
 from wtforms.validators import Optional, DataRequired
 
 
-__version__ = '0.2.1'
+__version__ = '0.2.2'
 
 
 class InvalidData(Exception):
