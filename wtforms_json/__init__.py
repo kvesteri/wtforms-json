@@ -37,8 +37,13 @@ def flatten_json(form, json, parent_key='', separator='-'):
             u'This function only accepts dict-like data structures.'
         )
 
+    accept_unknown_keys = getattr(form, '_accept_unknown_keys', None)
+
     items = []
     for key, value in json.items():
+        if not getattr(form, key, None) and accept_unknown_keys:
+            continue
+
         try:
             unbound_field = getattr(form, key)
         except AttributeError:
