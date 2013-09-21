@@ -211,6 +211,8 @@ def is_missing(self):
 
 @property
 def field_list_is_missing(self):
+    if len(self.entries) == 0:
+        return False
     return all([field.is_missing for field in self.entries])
 
 
