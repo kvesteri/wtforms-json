@@ -141,8 +141,11 @@ def monkey_patch_form_process(func):
     Monkey patches Form.process method to better understand missing values.
     """
     def process(self, formdata, data=_unset_value, original_keys=[], **kwargs):
+        if hasattr(self, '_original_keys'):
+            original_keys = self._original_keys
         for name, field in self._fields.iteritems():
             field._is_missing = (name not in original_keys)
+        self._original_keys = original_keys
         func(self, formdata, data=data, **kwargs)
 
     return process
@@ -154,9 +157,7 @@ def monkey_patch_field_process(func):
     """
     def process(self, formdata, data=_unset_value):
         call_original_func = True
-        if isinstance(self, FieldList):
-            self.is_missing = getattr(self, '_is_missing', True)
-        elif not isinstance(self, FormField):
+        if not isinstance(self, FormField):
             self.is_missing = True
             if formdata:
                 if self.name in formdata:
@@ -185,6 +186,7 @@ def monkey_patch_field_process(func):
                 self.data = u''
             else:
                 self.data = six.text_type(self.data)
+
     return process
 
 
@@ -229,16 +231,19 @@ def is_missing(self):
 
 @property
 def field_list_is_missing(self):
+    if hasattr(self, '_is_missing'):
+        return self._is_missing
+
     return all([field.is_missing for field in self.entries])
 
 
 def init():
     Form.is_missing = is_missing
+    FieldList.is_missing = field_list_is_missing
+    Form.from_json = from_json
     Form.patch_data = patch_data
     FieldList.patch_data = patch_data
-    Form.from_json = from_json
     Form.process = monkey_patch_form_process(Form.process)
     Field.process = monkey_patch_field_process(Field.process)
     FormField.process = monkey_patch_field_process(FormField.process)
-    FieldList.process = monkey_patch_field_process(FieldList.process)
     BooleanField.process_formdata = boolean_process_formdata
