@@ -128,7 +128,8 @@ def patch_data(self):
 
         if isinstance(f, FormField):
             data[name] = f.patch_data
-        elif isinstance(f, FieldList):
+        elif (isinstance(f, FieldList) and
+                f.unbound_field.field_class.__name__ == 'FormField'):
             data[name] = [i.patch_data for i in f.entries]
         else:
             data[name] = f.data
