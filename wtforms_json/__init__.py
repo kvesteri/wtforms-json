@@ -136,13 +136,27 @@ def patch_data(self):
     return data
 
 
-def monkey_patch_process(func):
+def monkey_patch_form_process(func):
     """
     Monkey patches Form.process method to better understand missing values.
     """
+    def process(self, formdata, data=_unset_value, original_keys=[], **kwargs):
+        for name, field in self._fields.iteritems():
+            field._is_missing = (name not in original_keys)
+        func(self, formdata, data=data, **kwargs)
+
+    return process
+
+
+def monkey_patch_field_process(func):
+    """
+    Monkey patches Field.process method to better understand missing values.
+    """
     def process(self, formdata, data=_unset_value):
         call_original_func = True
-        if not isinstance(self, FormField):
+        if isinstance(self, FieldList):
+            self.is_missing = getattr(self, '_is_missing', True)
+        elif not isinstance(self, FormField):
             self.is_missing = True
             if formdata:
                 if self.name in formdata:
@@ -187,7 +201,10 @@ class MultiDict(dict):
 
 @classmethod
 def from_json(cls, formdata=None, obj=None, **kwargs):
-    return cls(MultiDict(flatten_json(cls, formdata)), obj, **kwargs)
+    original_keys = formdata.keys() if formdata else []
+    form = cls(MultiDict(flatten_json(cls, formdata)), obj,
+        original_keys=original_keys, **kwargs)
+    return form
 
 
 def boolean_process_formdata(self, valuelist):
@@ -212,17 +229,16 @@ def is_missing(self):
 
 @property
 def field_list_is_missing(self):
-    if len(self.entries) == 0:
-        return False
     return all([field.is_missing for field in self.entries])
 
 
 def init():
     Form.is_missing = is_missing
     Form.patch_data = patch_data
-    Form.from_json = from_json
     FieldList.patch_data = patch_data
-    FieldList.is_missing = field_list_is_missing
-    Field.process = monkey_patch_process(Field.process)
-    FormField.process = monkey_patch_process(FormField.process)
+    Form.from_json = from_json
+    Form.process = monkey_patch_form_process(Form.process)
+    Field.process = monkey_patch_field_process(Field.process)
+    FormField.process = monkey_patch_field_process(FormField.process)
+    FieldList.process = monkey_patch_field_process(FieldList.process)
     BooleanField.process_formdata = boolean_process_formdata
