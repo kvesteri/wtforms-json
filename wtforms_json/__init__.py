@@ -128,6 +128,8 @@ def patch_data(self):
 
         if isinstance(f, FormField):
             data[name] = f.patch_data
+        elif isinstance(f, FieldList):
+            data[name] = [i.patch_data for i in f.entries]
         else:
             data[name] = f.data
     return data
@@ -216,6 +218,7 @@ def init():
     Form.is_missing = is_missing
     Form.patch_data = patch_data
     Form.from_json = from_json
+    FieldList.patch_data = patch_data
     FieldList.is_missing = field_list_is_missing
     Field.process = monkey_patch_process(Field.process)
     FormField.process = monkey_patch_process(FormField.process)
