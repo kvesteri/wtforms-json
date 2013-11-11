@@ -1,3 +1,4 @@
+from pytest import mark
 from wtforms import (
     Form,
     IntegerField,
@@ -5,6 +6,14 @@ from wtforms import (
     TextField,
 )
 from wtforms.validators import IPAddress
+from wtforms.ext.sqlalchemy.fields import QuerySelectField
+
+sa = None
+try:
+    import sqlalchemy as sa
+    from sqlalchemy.ext.declarative import declarative_base
+except ImportError:
+    pass
 
 
 class TestFieldTypeCoercion(object):
@@ -36,6 +45,41 @@ class FooForm(Form):
         ),
         coerce=int
     )
+
+
+@mark.skipif('sa is None')
+class TestQuerySelectField(object):
+    def setup_method(self, method):
+        self.Base = declarative_base()
+
+        class Team(self.Base):
+            __tablename__ = 'team'
+            id = sa.Column(sa.Integer, primary_key=True)
+            name = sa.Column(sa.Unicode(255))
+
+        class Match(self.Base):
+            __tablename__ = 'match'
+            id = sa.Column(sa.Integer, primary_key=True)
+            name = sa.Column(sa.Unicode(255))
+            team_id = sa.Column(sa.BigInteger, sa.ForeignKey(Team.id))
+            team = sa.orm.relationship(Team)
+
+        self.Team = Team
+        self.Match = Match
+
+    def test_integer_coercion(self):
+        class MatchForm(Form):
+            team = QuerySelectField(
+                query_factory=lambda: [
+                    self.Team(id=1, name='Manchester United'),
+                    self.Team(id=2, name='FC Barcelona')
+                ]
+            )
+
+        data = {'team': 1}
+        form = MatchForm.from_json(data)
+        assert form.validate()
+        assert form.team.data
 
 
 class TestSelectMultipleField(object):

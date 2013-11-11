@@ -10,6 +10,9 @@ from wtforms.fields import (
     TextField,
     _unset_value
 )
+from wtforms.ext.sqlalchemy.fields import (
+    QuerySelectField, QuerySelectMultipleField
+)
 from wtforms.validators import Optional, DataRequired
 
 
@@ -170,6 +173,7 @@ def monkey_patch_field_process(func):
                     self.is_missing = not bool(formdata.getlist(self.name))
                 else:
                     self.is_missing = True
+
         if call_original_func:
             func(self, formdata, data=data)
 
@@ -204,8 +208,12 @@ class MultiDict(dict):
 @classmethod
 def from_json(cls, formdata=None, obj=None, **kwargs):
     original_keys = formdata.keys() if formdata else []
-    form = cls(MultiDict(flatten_json(cls, formdata)), obj,
-        original_keys=original_keys, **kwargs)
+    form = cls(
+        MultiDict(flatten_json(cls, formdata)),
+        obj,
+        original_keys=original_keys,
+        **kwargs
+    )
     return form
 
 
@@ -237,6 +245,14 @@ def field_list_is_missing(self):
     return all([field.is_missing for field in self.entries])
 
 
+def monkey_patch_process_formdata(func):
+    def process_formdata(self, valuelist):
+        valuelist = map(six.text_type, valuelist)
+
+        return func(self, valuelist)
+    return process_formdata
+
+
 def init():
     Form.is_missing = is_missing
     FieldList.is_missing = field_list_is_missing
@@ -244,6 +260,12 @@ def init():
     Form.patch_data = patch_data
     FieldList.patch_data = patch_data
     Form.process = monkey_patch_form_process(Form.process)
+    QuerySelectField.process_formdata = monkey_patch_process_formdata(
+        QuerySelectField.process_formdata
+    )
+    QuerySelectMultipleField.process_formdata = monkey_patch_process_formdata(
+        QuerySelectMultipleField.process_formdata
+    )
     Field.process = monkey_patch_field_process(Field.process)
     FormField.process = monkey_patch_field_process(FormField.process)
     BooleanField.process_formdata = boolean_process_formdata
