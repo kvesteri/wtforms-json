@@ -4,6 +4,12 @@ Changelog
 Here you can see the full list of changes between each WTForms-JSON release.
 
 
+0.2.3 (2013-11-11)
+^^^^^^^^^^^^^^^^^^
+
+- Added support for QuerySelectField and QuerySelectMultipleField
+
+
 0.2.2 (2013-08-30)
 ^^^^^^^^^^^^^^^^^^
 
