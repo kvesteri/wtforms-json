@@ -1,20 +1,14 @@
-from pytest import raises
 from wtforms import (
     BooleanField,
     FieldList,
     Form,
     FormField,
     IntegerField,
-    SelectMultipleField,
     TextField,
 )
-from wtforms.validators import IPAddress
 from wtforms.form import WebobInputWrapper
 from wtforms.validators import Required, Optional
-from wtforms_json import init, MultiDict
-
-
-init()
+from wtforms_json import MultiDict
 
 
 class BooleanTestForm(Form):

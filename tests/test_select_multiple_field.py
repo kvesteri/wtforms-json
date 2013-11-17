@@ -1,7 +1,4 @@
-import wtforms_json
 from wtforms import *
-
-wtforms_json.init()
 
 
 def test_select_field():
