@@ -131,27 +131,14 @@ def patch_data(self):
 
         if isinstance(f, FormField):
             data[name] = f.patch_data
-        elif (isinstance(f, FieldList) and
-                f.unbound_field.field_class.__name__ == 'FormField'):
-            data[name] = [i.patch_data for i in f.entries]
+        elif isinstance(f, FieldList):
+            if issubclass(f.unbound_field.field_class, FormField):
+                data[name] = [i.patch_data for i in f.entries]
+            else:
+                data[name] = [i.data for i in f.entries]
         else:
             data[name] = f.data
     return data
-
-
-def monkey_patch_form_process(func):
-    """
-    Monkey patches Form.process method to better understand missing values.
-    """
-    def process(self, formdata, data=_unset_value, original_keys=[], **kwargs):
-        if hasattr(self, '_original_keys'):
-            original_keys = self._original_keys
-        for name, field in self._fields.iteritems():
-            field._is_missing = (name not in original_keys)
-        self._original_keys = original_keys
-        func(self, formdata, data=data, **kwargs)
-
-    return process
 
 
 def monkey_patch_field_process(func):
@@ -161,6 +148,7 @@ def monkey_patch_field_process(func):
     def process(self, formdata, data=_unset_value):
         call_original_func = True
         if not isinstance(self, FormField):
+
             self.is_missing = True
             if formdata:
                 if self.name in formdata:
@@ -206,12 +194,15 @@ class MultiDict(dict):
 
 
 @classmethod
-def from_json(cls, formdata=None, obj=None, **kwargs):
-    original_keys = formdata.keys() if formdata else []
+def from_json(
+    cls, formdata=None, obj=None, prefix='', data=None, meta=None, **kwargs
+):
     form = cls(
-        MultiDict(flatten_json(cls, formdata)),
-        obj,
-        original_keys=original_keys,
+        formdata=MultiDict(flatten_json(cls, formdata)) if formdata else None,
+        obj=obj,
+        prefix=prefix,
+        data=data,
+        meta=meta,
         **kwargs
     )
     return form
@@ -259,7 +250,6 @@ def init():
     Form.from_json = from_json
     Form.patch_data = patch_data
     FieldList.patch_data = patch_data
-    Form.process = monkey_patch_form_process(Form.process)
     QuerySelectField.process_formdata = monkey_patch_process_formdata(
         QuerySelectField.process_formdata
     )

@@ -4,6 +4,13 @@ Changelog
 Here you can see the full list of changes between each WTForms-JSON release.
 
 
+0.2.4 (2013-11-17)
+^^^^^^^^^^^^^^^^^^
+
+- Fixed object value setting in from_json
+- Prepared support for WTForms 2.0
+
+
 0.2.3 (2013-11-11)
 ^^^^^^^^^^^^^^^^^^
 
