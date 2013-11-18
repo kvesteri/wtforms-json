@@ -23,6 +23,15 @@ class PyTest(Command):
         errno = subprocess.call(['py.test'])
         raise SystemExit(errno)
 
+
+extras_require = {
+    'test': [
+        'pytest>=2.2.3',
+        'WTForms-Alchemy>=0.8.6'
+    ],
+}
+
+
 setup(
     name='WTForms-JSON',
     version='0.2.4',
@@ -43,6 +52,7 @@ setup(
         'WTForms>=1.0.2',
         'six>=1.3.0'
     ],
+    extras_require=extras_require,
     cmdclass={'test': PyTest},
     classifiers=[
         'Environment :: Web Environment',
