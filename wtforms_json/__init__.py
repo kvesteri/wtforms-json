@@ -120,7 +120,7 @@ def patch_data(self):
     def is_required(field):
         return DataRequired in [v.__class__ for v in field.validators]
 
-    for name, f in six.iteritems(self._fields.iteritems):
+    for name, f in six.iteritems(self._fields):
         if f.is_missing:
             if is_optional(f):
                 continue
