@@ -41,11 +41,13 @@ def create_form_from_json(**kwargs):
         }
     return TestForm.from_json(kwargs['json'])
 
+
 def create_populated_obj_from_json_form():
     form = create_form_from_json()
     obj = Test()
     form.populate_obj(obj)
     return obj
+
 
 def test_init_formdata():
     json = {
@@ -57,23 +59,10 @@ def test_init_formdata():
     form = create_form_from_json(json=json)
     assert form.data == json
 
+
 def test_populate_form_from_object():
     obj = create_populated_obj_from_json_form()
     form = TestForm(obj=obj)
     assert len(form.data) == 4
     for key in form.data:
         assert form.data[key] == obj.__dict__[key]
-
-def test_update_selection_of_fields():
-    obj = create_form_from_json()
-    update = {
-        'b': u'Updated',
-        'c': u'Updated',
-    }
-    form = TestForm.from_json(update,obj=obj)
-
-    assert update['b'] == form.b.data
-    assert update['c'] == form.c.data
-    assert obj.a.data == form.a.data
-    assert obj.d.data == form.d.data
-
