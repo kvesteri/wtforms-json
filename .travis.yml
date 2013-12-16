@@ -3,7 +3,11 @@ python:
   - 2.6
   - 2.7
   - 3.3
+env:
+  - WTFORMS=WTForms==1.0.5
+  - WTFORMS=https://github.com/wtforms/wtforms/archive/wtforms2.zip
 install:
+  - pip install $WTFORMS
   - pip install -e ".[test]"
 script:
   - python setup.py test
