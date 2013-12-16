@@ -195,10 +195,19 @@ class MultiDict(dict):
 
 @classmethod
 def from_json(
-    cls, formdata=None, obj=None, prefix='', data=None, meta=None, **kwargs
+    cls,
+    formdata=None,
+    obj=None,
+    prefix='',
+    data=None,
+    meta=None,
+    skip_unknown_keys=True,
+    **kwargs
 ):
     form = cls(
-        formdata=MultiDict(flatten_json(cls, formdata)) if formdata else None,
+        formdata=MultiDict(
+            flatten_json(cls, formdata, skip_unknown_keys=skip_unknown_keys)
+        ) if formdata else None,
         obj=obj,
         prefix=prefix,
         data=data,

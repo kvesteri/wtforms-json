@@ -1,3 +1,4 @@
+from pytest import raises
 from wtforms import (
     BooleanField,
     FieldList,
@@ -8,7 +9,7 @@ from wtforms import (
 )
 from wtforms.form import WebobInputWrapper
 from wtforms.validators import Required, Optional
-from wtforms_json import MultiDict
+from wtforms_json import MultiDict, InvalidData
 
 
 class BooleanTestForm(Form):
@@ -40,6 +41,16 @@ class EventForm(Form):
     location = FormField(LocationForm)
     attendees = IntegerField()
     attendee_names = FieldList(TextField())
+
+
+class TestSkipUnknownKeys(object):
+    def test_skips_unknown_keys(self):
+        json = {
+            'name': 'some patched name',
+            'unknown': 'something'
+        }
+        with raises(InvalidData):
+            EventForm.from_json(json, skip_unknown_keys=False)
 
 
 class TestFormProcessAfterMonkeyPatch(object):
