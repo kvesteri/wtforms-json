@@ -4,6 +4,12 @@ Changelog
 Here you can see the full list of changes between each WTForms-JSON release.
 
 
+0.2.5 (2013-12-16)
+^^^^^^^^^^^^^^^^^^
+
+- Fixed skip_unknown_keys option passing from from_json to flatten_json (#17)
+
+
 0.2.4 (2013-11-17)
 ^^^^^^^^^^^^^^^^^^
 
