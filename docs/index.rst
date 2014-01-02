@@ -61,11 +61,11 @@ form. Notice how we are initalizing the form using from_json classmethod. ::
 Here from_json() takes exactly the same parameters as wtforms Form.__init__().
 
 
-If you want WTForms-JSON to throw errors when unknown json keys are encountered just pass skip_unknown_fields=False to from_json.
+If you want WTForms-JSON to throw errors when unknown json keys are encountered just pass skip_unknown_keys=False to from_json.
 ::
 
     json = {
-        'some_unknown_key'
+        'some_unknown_key': 'some_value'
     }
 
     # Throws exception
