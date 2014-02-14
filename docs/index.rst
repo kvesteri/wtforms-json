@@ -14,7 +14,7 @@ What does it do?
 
 - Support for patch data requests with patch_data Form property
 
-- Function for converting JSON data into dict that WTForms understands (flatten_dict function)
+- Function for converting JSON data into dict that WTForms understands (flatten_json function)
 
 
 Quickstart
@@ -109,12 +109,14 @@ Internals
 ---------
 
 WTForm uses special flattened dict as a data parameter for forms. WTForms-JSON
-provides a method for converting JSON into this format. ::
+provides a method for converting JSON into this format.
+
+Note this is done automatically internally ::
 
 
     from wtforms import Form
     from wtforms.fields import FormField, StringField
-    from wtforms_json import flatten_dict
+    from wtforms_json import flatten_json
 
 
     class FormB(Form):
@@ -124,14 +126,14 @@ provides a method for converting JSON into this format. ::
         a = FormField(FormB)
 
 
-    flatten_dict({'a': {'b': 'c'}})
+    flatten_json({'a': {'b': 'c'}})
     >>> {'a-b': 'c'}
 
 
 This neat little function understands nested lists and dicts as well. ::
 
 
-    from wtforms_json import flatten_dict
+    from wtforms_json import flatten_json
 
 
     class FormC(Form):
@@ -149,6 +151,6 @@ This neat little function understands nested lists and dicts as well. ::
         'a': [{'b': {'c': 1}}]
     }
 
-    flatten_dict(deep_dict)
+    flatten_json(deep_dict)
     >>> {'a-0-b-c': 1}
 
