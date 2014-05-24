@@ -16,7 +16,7 @@ from wtforms.ext.sqlalchemy.fields import (
 from wtforms.validators import Optional, DataRequired
 
 
-__version__ = '0.2.5'
+__version__ = '0.2.6'
 
 
 class InvalidData(Exception):

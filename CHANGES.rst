@@ -4,6 +4,12 @@ Changelog
 Here you can see the full list of changes between each WTForms-JSON release.
 
 
+0.2.6 (2014-05-24)
+^^^^^^^^^^^^^^^^^^
+
+- Made skip_unknown_keys=True prevent raising errors from keys that exist in form class but are not form fields
+
+
 0.2.5 (2013-12-16)
 ^^^^^^^^^^^^^^^^^^
 
