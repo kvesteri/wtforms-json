@@ -7,7 +7,6 @@ from wtforms import (
     IntegerField,
     TextField,
 )
-from wtforms.form import WebobInputWrapper
 from wtforms.validators import Required, Optional
 from wtforms_json import MultiDict, InvalidData
 
@@ -58,7 +57,7 @@ class TestFormProcessAfterMonkeyPatch(object):
         json = {
             'name': 'some patched name'
         }
-        form = EventForm(formdata=WebobInputWrapper(MultiDict(json)))
+        form = EventForm(formdata=MultiDict(json))
         assert form.data
 
 
