@@ -31,6 +31,19 @@ class TestJsonDecoder(object):
         with raises(InvalidData):
             flatten_json(MyForm, {'b': 123}, skip_unknown_keys=False)
 
+    def test_unknown_attribute_sharing_form_class_property_name(self):
+        class MyForm(Form):
+            a = BooleanField()
+
+        flatten_json(MyForm, {'data': 13})
+
+    def test_unknown_attribute_sharing_form_class_property_name_without_skip_unknown_keys(self):
+        class MyForm(Form):
+            a = BooleanField()
+
+        with raises(InvalidData):
+            flatten_json(MyForm, {'data': 123}, skip_unknown_keys=False)
+
     def test_supports_dicts(self):
         class MyForm(Form):
             a = BooleanField()
