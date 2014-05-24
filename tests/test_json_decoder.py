@@ -31,6 +31,31 @@ class TestJsonDecoder(object):
         with raises(InvalidData):
             flatten_json(MyForm, {'b': 123}, skip_unknown_keys=False)
 
+    def test_sharing_class_property(self):
+        """ When an unknown attribute has the same name as a property on
+        the Form class, the attribute is mistakenly seen as known because
+        getattr can retrieve the property, but when property.field_class
+        is accessed an error is raised. This tests that the error is not
+        raised when skip_unknown_keys is True.
+        """
+        class MyForm(Form):
+            a = BooleanField()
+
+        flatten_json(MyForm, {'data': 13})
+
+    def test_sharing_class_property_without_skip_unknown_keys(self):
+        """ When an unknown attribute has the same name as a property on
+        the Form class, the attribute is mistakenly seen as known because
+        getattr can retrieve the property, but when property.field_class
+        is accessed an error is raised. This tests that the error IS
+        raised when skip_unknown_keys is False.
+        """
+        class MyForm(Form):
+            a = BooleanField()
+
+        with raises(InvalidData):
+            flatten_json(MyForm, {'data': 123}, skip_unknown_keys=False)
+
     def test_supports_dicts(self):
         class MyForm(Form):
             a = BooleanField()

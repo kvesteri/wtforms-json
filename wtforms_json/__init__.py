@@ -63,7 +63,10 @@ def flatten_json(
         try:
             field_class = unbound_field.field_class
         except AttributeError:
-            raise InvalidData(u"Key '%s' is not valid field class." % key)
+            if skip_unknown_keys:
+                continue
+            else:
+                raise InvalidData(u"Key '%s' is not valid field class." % key)
 
         new_key = parent_key + separator + key if parent_key else key
         if isinstance(value, collections.MutableMapping):
