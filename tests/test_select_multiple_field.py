@@ -1,4 +1,12 @@
-from wtforms import *
+from wtforms import (
+    TextField,
+    SelectField,
+    Form,
+    SelectFieldBase,
+    SelectMultipleField,
+    validators,
+    widgets
+)
 
 
 def test_select_field():
@@ -60,7 +68,6 @@ def test_custom_field():
             if self.allow_blank:
                 yield (u'__None', self.blank_text, self.data is None)
             for item in self.POWERS:
-                label = self.label_attr or ''
                 selected = item[0] in self.data
                 yield (item[0], item[1], selected)
 
