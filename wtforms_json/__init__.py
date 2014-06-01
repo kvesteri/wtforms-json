@@ -279,7 +279,7 @@ def monkey_patch_optional_call(func):
     def call(self, form, field, *args, **kwargs):
         try:
             func(self, form, field, *args, **kwargs)
-        except StopValidation, e:
+        except StopValidation:
             if field.is_missing:
                 raise StopValidation()
 
