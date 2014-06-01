@@ -2,6 +2,7 @@ import collections
 
 import six
 from wtforms import Form
+from wtforms.compat import string_types
 from wtforms.fields import (
     BooleanField,
     Field,
@@ -283,16 +284,27 @@ def monkey_patch_optional_call(func):
             if field.is_missing:
                 raise StopValidation()
 
-            if field.raw_data is None and self.nullable:
-                raise StopValidation()
-
-            if (not field.raw_data or isinstance(field.raw_data[0], string_types) and not self.string_check(field.raw_data[0])) and self.blank:
-                raise StopValidation()
-
             if self.message is None:
                 message = field.gettext('This field is required.')
             else:
                 message = self.message
+
+            if field.raw_data is None:
+                if self.nullable:
+                    raise StopValidation()
+                elif self.message is None:
+                    message = field.gettext('This field can not be null.')
+
+            else:
+                is_blank = (
+                    isinstance(field.raw_data[0], string_types) and
+                    not self.string_check(field.raw_data[0])
+                )
+                if is_blank and self.blank:
+                    raise StopValidation()
+                elif self.message is None:
+                    message = field.gettext('This field can not be blank.')
+
             raise StopValidation(message)
 
     return call

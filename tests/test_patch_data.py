@@ -5,7 +5,7 @@ from wtforms import (
     Form,
     FormField,
     IntegerField,
-    TextField,
+    StringField,
 )
 from wtforms.validators import Required, Optional
 from wtforms_json import MultiDict, InvalidData
@@ -30,16 +30,16 @@ class TestPatchedBooleans(object):
 
 
 class LocationForm(Form):
-    name = TextField()
+    name = StringField()
     longitude = IntegerField()
     latitude = IntegerField()
 
 
 class EventForm(Form):
-    name = TextField()
+    name = StringField()
     location = FormField(LocationForm)
     attendees = IntegerField()
-    attendee_names = FieldList(TextField())
+    attendee_names = FieldList(StringField())
 
 
 class TestSkipUnknownKeys(object):
@@ -102,3 +102,83 @@ class TestFormPatchData(object):
         }
         form = EventForm.from_json(json)
         assert form.patch_data == json
+
+
+class OptionalTestForm(Form):
+    can_be_null = StringField(
+        validators=[Optional(nullable=True, blank=False)]
+    )
+    can_be_blank = StringField(
+        validators=[Optional(nullable=False, blank=True)]
+    )
+    can_be_both = StringField(validators=[Optional()])
+    can_be_missing = StringField(
+        validators=[Optional(nullable=False, blank=False)]
+    )
+
+
+class TestPatchOptionalValidator(object):
+    def test_all_pass(self):
+        json = {
+            'can_be_null': None,
+            'can_be_blank': '',
+            'can_be_both': None,
+            'can_be_missing': 'here',
+        }
+        form = OptionalTestForm.from_json(json)
+        assert form.validate() == True
+        assert form.patch_data == json
+
+    def test_missing_fail_because_null(self):
+        json = {
+            'can_be_missing': None,
+        }
+        errors = {
+            'can_be_missing': ['This field can not be null.'],
+        }
+        form = OptionalTestForm.from_json(json)
+        assert form.validate() == False
+        assert form.errors == errors
+
+    def test_missing_fail_because_blank(self):
+        json = {
+            'can_be_missing': '',
+        }
+        errors = {
+            'can_be_missing': ['This field can not be blank.'],
+        }
+        form = OptionalTestForm.from_json(json)
+        assert form.validate() == False
+        assert form.errors == errors
+
+    def test_missing_pass_when_missing(self):
+        json = {
+            'can_be_null': None,
+            'can_be_blank': '',
+            'can_be_both': '',
+        }
+        form = OptionalTestForm.from_json(json)
+        assert form.validate() == True
+        assert form.patch_data == json
+
+    def test_nullable_fail_when_blank(self):
+        json = {
+            'can_be_null': '',
+        }
+        errors = {
+            'can_be_null': ['This field can not be blank.'],
+        }
+        form = OptionalTestForm.from_json(json)
+        assert form.validate() == False
+        assert form.errors == errors
+
+    def test_blank_fail_because_null(self):
+        json = {
+            'can_be_blank': None,
+        }
+        errors = {
+            'can_be_blank': ['This field can not be null.'],
+        }
+        form = OptionalTestForm.from_json(json)
+        assert form.validate() == False
+        assert form.errors == errors
