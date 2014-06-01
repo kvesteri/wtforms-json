@@ -13,7 +13,7 @@ from wtforms.fields import (
 from wtforms.ext.sqlalchemy.fields import (
     QuerySelectField, QuerySelectMultipleField
 )
-from wtforms.validators import Optional, DataRequired
+from wtforms.validators import Optional, DataRequired, StopValidation
 
 
 __version__ = '0.2.6'
@@ -256,6 +256,48 @@ def monkey_patch_process_formdata(func):
     return process_formdata
 
 
+def monkey_patch_optional_init(func):
+    """
+    Monkey patches Optional.__init__ to accept nullable and blank kwargs.
+    """
+    def init(self, strip_whitespace=True, nullable=True, blank=True, message=None):
+        if strip_whitespace:
+            self.string_check = lambda s: s.strip()
+        else:
+            self.string_check = lambda s: s
+        self.nullable = nullable
+        self.blank = blank
+        self.message = message
+
+    return init
+
+
+def monkey_patch_optional_call(func):
+    """
+    Monkey patches Optional.__call__ to handle nullable and blank.
+    """
+    def call(self, form, field, *args, **kwargs):
+        try:
+            func(self, form, field, *args, **kwargs)
+        except StopValidation, e:
+            if field.is_missing:
+                raise StopValidation()
+
+            if field.raw_data is None and self.nullable:
+                raise StopValidation()
+
+            if (not field.raw_data or isinstance(field.raw_data[0], string_types) and not self.string_check(field.raw_data[0])) and self.blank:
+                raise StopValidation()
+
+            if self.message is None:
+                message = field.gettext('This field is required.')
+            else:
+                message = self.message
+            raise StopValidation(message)
+
+    return call
+
+
 def init():
     Form.is_missing = is_missing
     FieldList.is_missing = field_list_is_missing
@@ -271,3 +313,5 @@ def init():
     Field.process = monkey_patch_field_process(Field.process)
     FormField.process = monkey_patch_field_process(FormField.process)
     BooleanField.process_formdata = boolean_process_formdata
+    Optional.__init__ = monkey_patch_optional_init(Optional.__init__)
+    Optional.__call__ = monkey_patch_optional_call(Optional.__call__)
