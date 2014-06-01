@@ -281,7 +281,7 @@ def monkey_patch_optional_call(func):
         try:
             func(self, form, field, *args, **kwargs)
         except StopValidation:
-            if field.is_missing:
+            if hasattr(field, 'is_missing') and field.is_missing:
                 raise StopValidation()
 
             if self.message is None:
