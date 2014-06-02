@@ -7,14 +7,14 @@ from wtforms import (
     IntegerField,
     StringField,
 )
-from wtforms.validators import Required, Optional
+from wtforms.validators import DataRequired, Optional
 from wtforms_json import MultiDict, InvalidData
 
 
 class BooleanTestForm(Form):
     is_active = BooleanField(default=False, validators=[Optional()])
-    is_confirmed = BooleanField(default=True, validators=[Required()])
-    is_private = BooleanField(default=False, validators=[Required()])
+    is_confirmed = BooleanField(default=True, validators=[DataRequired()])
+    is_private = BooleanField(default=False, validators=[DataRequired()])
 
 
 class TestPatchedBooleans(object):
@@ -178,6 +178,17 @@ class TestPatchOptionalValidator(object):
         }
         errors = {
             'can_be_blank': ['This field can not be null.'],
+        }
+        form = OptionalTestForm.from_json(json)
+        assert form.validate() == False
+        assert form.errors == errors
+
+    def test_blank_fail_when_whitespace(self):
+        json = {
+            'can_be_null': ' ',
+        }
+        errors = {
+            'can_be_null': ['This field can not be blank.'],
         }
         form = OptionalTestForm.from_json(json)
         assert form.validate() == False
