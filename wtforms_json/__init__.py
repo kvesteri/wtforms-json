@@ -220,15 +220,6 @@ def from_json(
     return form
 
 
-def boolean_process_formdata(self, valuelist):
-    """This function overrides BooleanField process_formdata in order
-    to add support for JSON styled boolean False values."""
-    if valuelist and valuelist[0] is False:
-        self.data = False
-    else:
-        self.data = bool(valuelist)
-
-
 @property
 def is_missing(self):
     if hasattr(self, '_is_missing'):
@@ -270,4 +261,4 @@ def init():
     )
     Field.process = monkey_patch_field_process(Field.process)
     FormField.process = monkey_patch_field_process(FormField.process)
-    BooleanField.process_formdata = boolean_process_formdata
+    BooleanField.false_values = BooleanField.false_values + (False,)
