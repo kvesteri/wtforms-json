@@ -96,20 +96,17 @@ def flatten_json(
 
 def flatten_json_list(field, json, parent_key='', separator='-'):
     items = []
-    i = 0
-    for item in json:
+    for i, item in enumerate(json):
         new_key = parent_key + separator + str(i)
         if isinstance(item, list):
             items.extend(flatten_json_list(item, new_key, separator))
         elif isinstance(item, dict):
-
             items.extend(
                 flatten_json(field.args[0], item, new_key, separator)
                 .items()
             )
         else:
             items.append((new_key, item))
-        i += 1
     return items
 
 
