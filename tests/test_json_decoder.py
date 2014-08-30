@@ -7,6 +7,7 @@ from wtforms import (
     IntegerField,
     SelectMultipleField,
     TextField,
+    Field,
 )
 from wtforms_json import flatten_json, InvalidData
 
@@ -106,3 +107,27 @@ class TestJsonDecoder(object):
         assert flatten_json(MyForm, {'a': {'b': {'c': 'd'}}}) == {
             'a-b-c': 'd'
         }
+
+    def test_only_flatten_on_form_field(self):
+        class DictField(Field):
+            def process_formdata(self, valuelist):
+                if valuelist:
+                    data = valuelist[0]
+                    if isinstance(data, dict):
+                        self.data = data
+                    else:
+                        raise 'Unsupported datatype'
+                else:
+                    self.data = {}
+
+        class MyForm(Form):
+            a = IntegerField()
+            b = DictField()
+
+        assert (
+            flatten_json(MyForm, {'a': False, 'b': {'key': 'value'}}) ==
+            {'a': False, 'b': {'key': 'value'}}
+        )
+
+
+

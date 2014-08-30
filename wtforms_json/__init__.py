@@ -70,10 +70,13 @@ def flatten_json(
 
         new_key = parent_key + separator + key if parent_key else key
         if isinstance(value, collections.MutableMapping):
-            items.extend(
-                flatten_json(unbound_field.args[0], value, new_key)
-                .items()
-            )
+            if issubclass(field_class, FormField):
+                items.extend(
+                    flatten_json(unbound_field.args[0], value, new_key)
+                    .items()
+                )
+            else:
+                items.append((new_key, value))
         elif isinstance(value, list):
             if issubclass(field_class, FieldList):
                 items.extend(
