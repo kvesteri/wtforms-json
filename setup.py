@@ -34,7 +34,7 @@ extras_require = {
 
 setup(
     name='WTForms-JSON',
-    version='0.2.6',
+    version='0.2.7',
     url='https://github.com/kvesteri/wtforms-json',
     license='BSD',
     author='Konsta Vesterinen',
