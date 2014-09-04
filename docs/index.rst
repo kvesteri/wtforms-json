@@ -8,23 +8,26 @@ WTForms-JSON is a `WTForms`_ extension for JSON data handling.
 What does it do?
 ----------------
 
-- Adds support for booleans (WTForms doesn't know how to handle `False` boolean values)
+- Adds support for booleans (WTForms doesn't know how to handle `False` boolean
+  values)
 
 - Adds support for ``None`` type :class:`~wtforms.fields.FormField` values
 
 - Adds support for ``None`` type :class:`~wtforms.fields.Field` values
 
-- Support for patch data requests with :attr:`patch_data` :class:`~wtforms.form.Form` property
+- Support for patch data requests with :attr:`patch_data`
+  :class:`~wtforms.form.Form` property
 
-- Function for converting JSON data into dict that WTForms understands (:func:`flatten_json` function)
+- Function for converting JSON data into dict that WTForms understands
+  (:func:`flatten_json` function)
 
 
 Quickstart
 ----------
 
 In order to start using WTForms-JSON, you need to first initialize the
-extension. This monkey patches some classes and methods within WTForms and
-adds JSON handling support::
+extension. This monkey patches some classes and methods within WTForms and adds
+JSON handling support::
 
     import wtforms_json
 
@@ -34,8 +37,8 @@ adds JSON handling support::
 First Example
 -------------
 
-After the extension has been initialized we can create an ordinary WTForms
-form. Notice how we are initalizing the form using :meth:`from_json` class method::
+After the extension has been initialized we can create an ordinary WTForms form.
+Notice how we are initalizing the form using :meth:`from_json` class  method::
 
 
     from wtforms import Form
@@ -60,10 +63,12 @@ form. Notice how we are initalizing the form using :meth:`from_json` class metho
     form = EventForm.from_json(json)
 
 
-Here :meth:`from_json` takes exactly the same parameters as :meth:`Form.__init__ <wtforms.form.Form.__init__>`.
+Here :meth:`from_json` takes exactly the same parameters as
+:meth:`Form.__init__ <wtforms.form.Form.__init__>`.
 
 
-If you want WTForms-JSON to throw errors when unknown json keys are encountered just pass ``skip_unknown_keys=False`` to :meth:`from_json`::
+If you want WTForms-JSON to throw errors when unknown json keys are encountered
+just pass ``skip_unknown_keys=False`` to :meth:`from_json`::
 
     json = {
         'some_unknown_key': 'some_value'
@@ -78,9 +83,9 @@ Using patch_data
 ----------------
 
 The way forms usually work on websites is that they post all the data within
-their fields. When working with APIs and JSON data it makes sense to
-not actually post all the data that hasn't changed -- rather make so called
-patch request which only post the data that the user actually changed.
+their fields. When working with APIs and JSON data it makes sense to not
+actually post all the data that hasn't changed -- rather make so called patch
+request which only post the data that the user actually changed.
 
 You can get access to the patch data (data that only contains the actually set
 fields or fields that have defaults and are required) with form's
