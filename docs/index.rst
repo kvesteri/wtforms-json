@@ -74,6 +74,7 @@ If you want WTForms-JSON to throw errors when unknown json keys are encountered 
 
 Using patch_data
 ----------------
+
 The way forms usually work on websites is that they post all the data within
 their fields. When working with APIs and JSON data it makes sense to
 not actually post all the data that hasn't changed - rather make so called
