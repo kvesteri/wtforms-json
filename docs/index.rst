@@ -94,8 +94,8 @@ fields or fields that have defaults and are required) with form's
 Now lets use the forms from the previous example::
 
 
-    form.data
-    >>> {
+    >>> form.data
+    {
         'name': 'First Event',
         'is_public': False,
         'location': {
@@ -103,11 +103,11 @@ Now lets use the forms from the previous example::
             'address': None
         }
     }
-    form.patch_data
-    >>> {
+    >>> form.patch_data
+    {
         'name': 'First Event',
         'location': {
-            'name': 'some location',
+            'name': 'some location'
         }
     }
 
@@ -133,8 +133,7 @@ Note this is done automatically internally::
         a = FormField(FormB)
 
 
-    flatten_json({'a': {'b': 'c'}})
-    >>> {'a-b': 'c'}
+    assert flatten_json({'a': {'b': 'c'}}) == {'a-b': 'c'}
 
 
 This neat little function understands nested lists and dicts as well::
@@ -158,6 +157,5 @@ This neat little function understands nested lists and dicts as well::
         'a': [{'b': {'c': 1}}]
     }
 
-    flatten_json(deep_dict)
-    >>> {'a-0-b-c': 1}
+    assert flatten_json(deep_dict) == {'a-0-b-c': 1}
 
