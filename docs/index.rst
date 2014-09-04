@@ -35,7 +35,7 @@ First Example
 -------------
 
 After the extension has been initialized we can create an ordinary WTForms
-form. Notice how we are initalizing the form using from_json classmethod::
+form. Notice how we are initalizing the form using from_json class method::
 
 
     from wtforms import Form
