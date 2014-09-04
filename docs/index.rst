@@ -22,7 +22,7 @@ Quickstart
 
 In order to start using WTForms-JSON, you need to first initialize the
 extension. This monkey patches some classes and methods within WTForms and
-adds json handling support. ::
+adds json handling support::
 
     import wtforms_json
 
@@ -33,7 +33,7 @@ First Example
 -------------
 
 After the extension has been initialized we can create an ordinary WTForms
-form. Notice how we are initalizing the form using from_json classmethod. ::
+form. Notice how we are initalizing the form using from_json classmethod::
 
 
     from wtforms import Form
@@ -61,8 +61,7 @@ form. Notice how we are initalizing the form using from_json classmethod. ::
 Here from_json() takes exactly the same parameters as wtforms Form.__init__().
 
 
-If you want WTForms-JSON to throw errors when unknown json keys are encountered just pass skip_unknown_keys=False to from_json.
-::
+If you want WTForms-JSON to throw errors when unknown json keys are encountered just pass skip_unknown_keys=False to from_json::
 
     json = {
         'some_unknown_key': 'some_value'
@@ -84,7 +83,7 @@ You can get access to the patch data (data that only contains the actually set
 fields or fields that have defaults and are required) with form's patch_data
 property.
 
-Now lets use the forms from the previous example: ::
+Now lets use the forms from the previous example::
 
 
     form.data
@@ -111,7 +110,7 @@ Internals
 WTForm uses special flattened dict as a data parameter for forms. WTForms-JSON
 provides a method for converting JSON into this format.
 
-Note this is done automatically internally ::
+Note this is done automatically internally::
 
 
     from wtforms import Form
@@ -130,7 +129,7 @@ Note this is done automatically internally ::
     >>> {'a-b': 'c'}
 
 
-This neat little function understands nested lists and dicts as well. ::
+This neat little function understands nested lists and dicts as well::
 
 
     from wtforms_json import flatten_json
