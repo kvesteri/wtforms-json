@@ -79,7 +79,7 @@ Using patch_data
 
 The way forms usually work on websites is that they post all the data within
 their fields. When working with APIs and JSON data it makes sense to
-not actually post all the data that hasn't changed - rather make so called
+not actually post all the data that hasn't changed -- rather make so called
 patch request which only post the data that the user actually changed.
 
 You can get access to the patch data (data that only contains the actually set
