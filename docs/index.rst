@@ -8,11 +8,11 @@ What does it do?
 
 - Adds support for booleans (WTForms doesn't know how to handle False boolean values)
 
-- Adds support for None type FormField values
+- Adds support for None type :class:`~wtforms.fields.FormField` values
 
-- Adds support for None type Field values
+- Adds support for None type :class:`~wtforms.fields.Field` values
 
-- Support for patch data requests with patch_data Form property
+- Support for patch data requests with patch_data :class:`~wtforms.form.Form` property
 
 - Function for converting JSON data into dict that WTForms understands (flatten_json function)
 
@@ -58,7 +58,7 @@ form. Notice how we are initalizing the form using from_json classmethod::
     form = EventForm.from_json(json)
 
 
-Here from_json() takes exactly the same parameters as wtforms Form.__init__().
+Here from_json() takes exactly the same parameters as :meth:`Form.__init__ <wtforms.form.Form.__init__>`.
 
 
 If you want WTForms-JSON to throw errors when unknown json keys are encountered just pass skip_unknown_keys=False to from_json::
