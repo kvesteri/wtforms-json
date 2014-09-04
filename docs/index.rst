@@ -24,7 +24,7 @@ Quickstart
 
 In order to start using WTForms-JSON, you need to first initialize the
 extension. This monkey patches some classes and methods within WTForms and
-adds json handling support::
+adds JSON handling support::
 
     import wtforms_json
 
