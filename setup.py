@@ -7,7 +7,11 @@ APIs.
 """
 
 from setuptools import setup, Command
+import os
+import re
 import subprocess
+
+HERE = os.path.dirname(os.path.abspath(__file__))
 
 
 class PyTest(Command):
@@ -24,6 +28,14 @@ class PyTest(Command):
         raise SystemExit(errno)
 
 
+def get_version():
+    filename = os.path.join(HERE, 'wtforms_json', '__init__.py')
+    with open(filename) as f:
+        contents = f.read()
+    pattern = r"^__version__ = '(.*?)'$"
+    return re.search(pattern, contents, re.MULTILINE).group(1)
+
+
 extras_require = {
     'test': [
         'pytest>=2.2.3',
@@ -34,7 +46,7 @@ extras_require = {
 
 setup(
     name='WTForms-JSON',
-    version='0.2.7',
+    version=get_version(),
     url='https://github.com/kvesteri/wtforms-json',
     license='BSD',
     author='Konsta Vesterinen',
