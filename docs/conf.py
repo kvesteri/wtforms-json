@@ -42,7 +42,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'wtforms-json'
-copyright = u'2012, Konsta Vesterinen'
+copyright = u'2012-2014, Konsta Vesterinen'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
