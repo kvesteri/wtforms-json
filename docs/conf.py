@@ -42,7 +42,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'wtforms-json'
-copyright = u'2012, Konsta Vesterinen'
+copyright = u'2012-2014, Konsta Vesterinen'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -244,4 +244,6 @@ texinfo_documents = [
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'http://docs.python.org/': None}
+intersphinx_mapping = {
+    'wtforms': ('http://wtforms.readthedocs.org/en/latest/', None)
+}

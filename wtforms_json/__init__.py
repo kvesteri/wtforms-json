@@ -17,7 +17,7 @@ from wtforms.ext.sqlalchemy.fields import (
 from wtforms.validators import Optional, DataRequired, StopValidation
 
 
-__version__ = '0.2.6'
+__version__ = '0.2.7'
 
 
 class InvalidData(Exception):
@@ -71,10 +71,13 @@ def flatten_json(
 
         new_key = parent_key + separator + key if parent_key else key
         if isinstance(value, collections.MutableMapping):
-            items.extend(
-                flatten_json(unbound_field.args[0], value, new_key)
-                .items()
-            )
+            if issubclass(field_class, FormField):
+                items.extend(
+                    flatten_json(unbound_field.args[0], value, new_key)
+                    .items()
+                )
+            else:
+                items.append((new_key, value))
         elif isinstance(value, list):
             if issubclass(field_class, FieldList):
                 items.extend(
@@ -94,20 +97,17 @@ def flatten_json(
 
 def flatten_json_list(field, json, parent_key='', separator='-'):
     items = []
-    i = 0
-    for item in json:
+    for i, item in enumerate(json):
         new_key = parent_key + separator + str(i)
         if isinstance(item, list):
             items.extend(flatten_json_list(item, new_key, separator))
         elif isinstance(item, dict):
-
             items.extend(
                 flatten_json(field.args[0], item, new_key, separator)
                 .items()
             )
         else:
             items.append((new_key, item))
-        i += 1
     return items
 
 
