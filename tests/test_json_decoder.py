@@ -128,6 +128,3 @@ class TestJsonDecoder(object):
             flatten_json(MyForm, {'a': False, 'b': {'key': 'value'}}) ==
             {'a': False, 'b': {'key': 'value'}}
         )
-
-
-

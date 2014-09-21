@@ -4,6 +4,12 @@ Changelog
 Here you can see the full list of changes between each WTForms-JSON release.
 
 
+0.2.8 (2014-09-21)
+^^^^^^^^^^^^^^^^^^
+
+- Fixed falsy boolean value handling
+
+
 0.2.7 (2014-09-01)
 ^^^^^^^^^^^^^^^^^^
 
