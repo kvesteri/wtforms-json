@@ -8,6 +8,7 @@ from wtforms.fields import (
     FieldList,
     FormField,
     TextField,
+    FileField,
     _unset_value
 )
 from wtforms.ext.sqlalchemy.fields import (
@@ -176,7 +177,7 @@ def monkey_patch_field_process(func):
             self.form._is_missing = False
             self.form._patch_data = None
 
-        if isinstance(self, TextField):
+        if isinstance(self, TextField) and not isinstance(self, FileField):
             if self.data is None:
                 self.data = u''
             else:
