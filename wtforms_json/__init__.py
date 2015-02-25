@@ -72,17 +72,19 @@ def flatten_json(
         new_key = parent_key + separator + key if parent_key else key
         if isinstance(value, collections.MutableMapping):
             if issubclass(field_class, FormField):
+                nested_form_class = unbound_field.bind(Form(), '').form_class
                 items.extend(
-                    flatten_json(unbound_field.args[0], value, new_key)
+                    flatten_json(nested_form_class, value, new_key)
                     .items()
                 )
             else:
                 items.append((new_key, value))
         elif isinstance(value, list):
             if issubclass(field_class, FieldList):
+                nested_unbound_field = unbound_field.bind(Form(), '').unbound_field
                 items.extend(
                     flatten_json_list(
-                        unbound_field.args[0],
+                        nested_unbound_field,
                         value,
                         new_key,
                         separator
@@ -99,11 +101,10 @@ def flatten_json_list(field, json, parent_key='', separator='-'):
     items = []
     for i, item in enumerate(json):
         new_key = parent_key + separator + str(i)
-        if isinstance(item, list):
-            items.extend(flatten_json_list(item, new_key, separator))
-        elif isinstance(item, dict):
+        if isinstance(item, dict) and issubclass(getattr(field, 'field_class'), FormField):
+            nested_class = field.field_class(*field.args, **field.kwargs).bind(Form(), '').form_class
             items.extend(
-                flatten_json(field.args[0], item, new_key, separator)
+                flatten_json(nested_class, item, new_key)
                 .items()
             )
         else:
