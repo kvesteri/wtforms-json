@@ -128,3 +128,53 @@ class TestJsonDecoder(object):
             flatten_json(MyForm, {'a': False, 'b': {'key': 'value'}}) ==
             {'a': False, 'b': {'key': 'value'}}
         )
+
+    def test_flatten_formfield_inheritance(self):
+        class NestedForm(Form):
+            b = TextField()
+
+        class SpecialField(FormField):
+            def __init__(self, *args, **kwargs):
+                super(SpecialField, self).__init__(NestedForm, *args, **kwargs)
+
+        class MyForm(Form):
+            a = SpecialField()
+
+        assert flatten_json(MyForm, {'a': {'b': 'c'}}) == {
+            'a-b': 'c'
+        }
+
+    def test_flatten_listfield_inheritance(self):
+        class SpecialField(FieldList):
+            def __init__(self, *args, **kwargs):
+                super(SpecialField, self).__init__(TextField(), *args, **kwargs)
+
+        class MyForm(Form):
+            a = SpecialField()
+
+        assert flatten_json(MyForm, {'a': [1, 2, 3]}) == {
+            'a-0': 1,
+            'a-1': 2,
+            'a-2': 3
+        }
+
+    def test_flatten_nested_listfield_and_formfield_inheritance(self):
+        class NestedForm(Form):
+            b = TextField()
+
+        class SpecialNestedField(FormField):
+            def __init__(self, *args, **kwargs):
+                super(SpecialNestedField, self).__init__(NestedForm, *args, **kwargs)
+
+        class SpecialField(FieldList):
+            def __init__(self, *args, **kwargs):
+                super(SpecialField, self).__init__(SpecialNestedField(), *args, **kwargs)
+
+        class MyForm(Form):
+            a = SpecialField()
+
+        assert flatten_json(MyForm, {'a': [{'b': 1}, {'b': 2}, {'b': 3}]}) == {
+            'a-0-b': 1,
+            'a-1-b': 2,
+            'a-2-b': 3
+        }
