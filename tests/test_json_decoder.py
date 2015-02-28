@@ -147,7 +147,11 @@ class TestJsonDecoder(object):
     def test_flatten_listfield_inheritance(self):
         class SpecialField(FieldList):
             def __init__(self, *args, **kwargs):
-                super(SpecialField, self).__init__(TextField(), *args, **kwargs)
+                super(SpecialField, self).__init__(
+                    TextField(),
+                    *args,
+                    **kwargs
+                )
 
         class MyForm(Form):
             a = SpecialField()
@@ -164,11 +168,19 @@ class TestJsonDecoder(object):
 
         class SpecialNestedField(FormField):
             def __init__(self, *args, **kwargs):
-                super(SpecialNestedField, self).__init__(NestedForm, *args, **kwargs)
+                super(SpecialNestedField, self).__init__(
+                    NestedForm,
+                    *args,
+                    **kwargs
+                )
 
         class SpecialField(FieldList):
             def __init__(self, *args, **kwargs):
-                super(SpecialField, self).__init__(SpecialNestedField(), *args, **kwargs)
+                super(SpecialField, self).__init__(
+                    SpecialNestedField(),
+                    *args,
+                    **kwargs
+                )
 
         class MyForm(Form):
             a = SpecialField()

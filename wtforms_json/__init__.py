@@ -81,7 +81,10 @@ def flatten_json(
                 items.append((new_key, value))
         elif isinstance(value, list):
             if issubclass(field_class, FieldList):
-                nested_unbound_field = unbound_field.bind(Form(), '').unbound_field
+                nested_unbound_field = unbound_field.bind(
+                    Form(),
+                    ''
+                ).unbound_field
                 items.extend(
                     flatten_json_list(
                         nested_unbound_field,
@@ -101,8 +104,14 @@ def flatten_json_list(field, json, parent_key='', separator='-'):
     items = []
     for i, item in enumerate(json):
         new_key = parent_key + separator + str(i)
-        if isinstance(item, dict) and issubclass(getattr(field, 'field_class'), FormField):
-            nested_class = field.field_class(*field.args, **field.kwargs).bind(Form(), '').form_class
+        if (
+            isinstance(item, dict) and
+            issubclass(getattr(field, 'field_class'), FormField)
+        ):
+            nested_class = field.field_class(
+                *field.args,
+                **field.kwargs
+            ).bind(Form(), '').form_class
             items.extend(
                 flatten_json(nested_class, item, new_key)
                 .items()
