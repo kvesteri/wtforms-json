@@ -4,6 +4,12 @@ Changelog
 Here you can see the full list of changes between each WTForms-JSON release.
 
 
+0.2.9 (2015-02-28)
+^^^^^^^^^^^^^^^^^^
+
+- Fixed inheritance handling with FieldLists and FormFields
+
+
 0.2.8 (2014-09-21)
 ^^^^^^^^^^^^^^^^^^
 
