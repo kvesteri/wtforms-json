@@ -252,7 +252,7 @@ def field_list_is_missing(self):
 
 def monkey_patch_process_formdata(func):
     def process_formdata(self, valuelist):
-        valuelist = map(six.text_type, valuelist)
+        valuelist = list(map(six.text_type, valuelist))
 
         return func(self, valuelist)
     return process_formdata
