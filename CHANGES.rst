@@ -4,6 +4,12 @@ Changelog
 Here you can see the full list of changes between each WTForms-JSON release.
 
 
+0.2.10 (2015-03-28)
+^^^^^^^^^^^^^^^^^^
+
+- Fixed process_formdata support for python3
+
+
 0.2.9 (2015-02-28)
 ^^^^^^^^^^^^^^^^^^
 
