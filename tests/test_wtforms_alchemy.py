@@ -4,7 +4,6 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from wtforms_alchemy import ModelForm
 
-
 engine = create_engine('sqlite:///:memory:')
 Base = declarative_base(engine)
 Session = sessionmaker(bind=engine)

@@ -5,10 +5,11 @@ from wtforms import (
     Form,
     FormField,
     IntegerField,
-    TextField,
+    TextField
 )
-from wtforms.validators import Required, Optional
-from wtforms_json import MultiDict, InvalidData
+from wtforms.validators import Optional, Required
+
+from wtforms_json import InvalidData, MultiDict
 
 
 class BooleanTestForm(Form):

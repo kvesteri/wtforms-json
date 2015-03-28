@@ -2,20 +2,20 @@ import collections
 
 import six
 from wtforms import Form
+from wtforms.ext.sqlalchemy.fields import (
+    QuerySelectField,
+    QuerySelectMultipleField
+)
 from wtforms.fields import (
+    _unset_value,
     BooleanField,
     Field,
     FieldList,
-    FormField,
-    TextField,
     FileField,
-    _unset_value
+    FormField,
+    TextField
 )
-from wtforms.ext.sqlalchemy.fields import (
-    QuerySelectField, QuerySelectMultipleField
-)
-from wtforms.validators import Optional, DataRequired
-
+from wtforms.validators import DataRequired, Optional
 
 __version__ = '0.2.10'
 

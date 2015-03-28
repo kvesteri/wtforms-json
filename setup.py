@@ -40,7 +40,8 @@ extras_require = {
     'test': [
         'pytest>=2.2.3',
         'WTForms-Alchemy>=0.8.6',
-        'flake8>=2.4.0'
+        'flake8>=2.4.0',
+        'isort>=3.9.6'
     ],
 }
 

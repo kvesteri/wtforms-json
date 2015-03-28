@@ -1,14 +1,15 @@
 from pytest import raises
 from wtforms import (
     BooleanField,
+    Field,
     FieldList,
-    FormField,
     Form,
+    FormField,
     IntegerField,
     SelectMultipleField,
-    TextField,
-    Field,
+    TextField
 )
+
 from wtforms_json import flatten_json, InvalidData
 
 

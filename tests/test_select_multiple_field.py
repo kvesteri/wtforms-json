@@ -1,9 +1,9 @@
 from wtforms import (
-    TextField,
-    SelectField,
     Form,
+    SelectField,
     SelectFieldBase,
     SelectMultipleField,
+    TextField,
     validators,
     widgets
 )
