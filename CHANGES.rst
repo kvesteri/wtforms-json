@@ -8,6 +8,7 @@ Here you can see the full list of changes between each WTForms-JSON release.
 ^^^^^^^^^^^^^^^^^^
 
 - Fixed process_formdata support for python3
+- Added flake8 and isort checks
 
 
 0.2.9 (2015-02-28)
