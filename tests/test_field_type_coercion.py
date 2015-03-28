@@ -1,3 +1,4 @@
+import six  # noqa
 from pytest import mark
 from wtforms import Form, IntegerField, SelectMultipleField, TextField
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
