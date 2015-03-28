@@ -39,7 +39,8 @@ def get_version():
 extras_require = {
     'test': [
         'pytest>=2.2.3',
-        'WTForms-Alchemy>=0.8.6'
+        'WTForms-Alchemy>=0.8.6',
+        'flake8>=2.4.0'
     ],
 }
 

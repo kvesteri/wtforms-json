@@ -7,7 +7,6 @@ from wtforms import (
 )
 from wtforms.validators import IPAddress
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
-import six
 
 sa = None
 try:
