@@ -88,6 +88,23 @@ class TestFormPatchData(object):
         form = EventForm.from_json(json)
         assert form.patch_data == json
 
+    def test_supports_empty_field_lists(self):
+        class Event(object):
+            def __init__(self, attendee_names):
+                self.name = "some name"
+                self.attendee_names = attendee_names
+
+        instance = Event(attendee_names=['Something'])
+        json = {
+            'name': 'some name',
+            'attendee_names': []
+        }
+        form = EventForm.from_json(json, obj=instance)
+        assert form.patch_data == dict(
+            attendee_names=(),
+            name="some name"
+        )
+
     def test_supports_null_values_for_form_fields(self):
         json = {
             'name': 'some name',

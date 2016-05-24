@@ -136,6 +136,12 @@ def patch_data(self):
 
     for name, f in six.iteritems(self._fields):
         if f.is_missing:
+            default_value = f.default
+            if default_value == () and isinstance(f.object_data, list):
+                default_value = []
+            if not isinstance(f, FormField) and f.object_data != default_value and \
+               f.default is not None:
+                data[name] = f.default
             if is_optional(f):
                 continue
             elif not is_required(f) and f.default is None:
