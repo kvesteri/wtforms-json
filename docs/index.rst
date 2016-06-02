@@ -3,7 +3,7 @@ WTForms-JSON
 
 WTForms-JSON is a `WTForms`_ extension for JSON data handling.
 
-.. _WTForms: https://wtforms.readthedocs.org/en/latest/
+.. _WTForms: https://wtforms.readthedocs.io/en/latest/
 
 What does it do?
 ----------------
