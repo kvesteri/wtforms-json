@@ -3,9 +3,9 @@ from wtforms import (
     SelectField,
     SelectFieldBase,
     SelectMultipleField,
-    TextField,
+    StringField,
     validators,
-    widgets
+    widgets,
 )
 
 
@@ -17,7 +17,7 @@ def test_select_field():
     ]
 
     class MomForm(Form):
-        name = TextField()
+        name = StringField()
         childs = SelectField(choices=((1, 1), (2, 2), (3, 3)), coerce=int)
 
     for fixture in fixtures:
@@ -33,7 +33,7 @@ def test_select_multiple_field():
     ]
 
     class AppleFanBoyForm(Form):
-        name = TextField()
+        name = StringField()
         gadgets = SelectMultipleField(
             choices=(
                 (1, 'Macbook Pro'),
@@ -41,7 +41,7 @@ def test_select_multiple_field():
                 (3, 'iPhone'),
                 (4, 'iPad')
             ),
-            validators=[validators.required()],
+            validators=[validators.DataRequired()],
             coerce=int
         )
 
@@ -86,9 +86,9 @@ def test_custom_field():
             return item in self.data
 
     class SuperHeroForm(Form):
-        name = TextField()
+        name = StringField()
         powers = SuperPowersField(
-            validators=[validators.required()]
+            validators=[validators.DataRequired()]
         )
 
     fixtures = [

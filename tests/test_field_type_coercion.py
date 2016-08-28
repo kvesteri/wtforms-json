@@ -1,7 +1,11 @@
 import six  # noqa
 from pytest import mark
-from wtforms import Form, IntegerField, SelectMultipleField, TextField
-from wtforms.ext.sqlalchemy.fields import QuerySelectField
+from wtforms import Form, IntegerField, SelectMultipleField, StringField
+try:
+    from wtforms.ext.sqlalchemy.fields import QuerySelectField
+    HAS_SQLALCHEMY_SUPPORT = False
+except ImportError:
+    HAS_SQLALCHEMY_SUPPORT = False
 from wtforms.validators import IPAddress
 
 sa = None
@@ -15,7 +19,7 @@ except ImportError:
 class TestFieldTypeCoercion(object):
     def test_integer_to_unicode_coercion(self):
         class NetworkForm(Form):
-            address = TextField('Address', [IPAddress()])
+            address = StringField('Address', [IPAddress()])
 
         network = dict(address=123)
 
@@ -43,7 +47,7 @@ class FooForm(Form):
     )
 
 
-@mark.skipif('sa is None or six.PY3')
+@mark.skipif('sa is None or six.PY3 or not HAS_SQLALCHEMY_SUPPORT')
 class TestQuerySelectField(object):
     def setup_method(self, method):
         self.Base = declarative_base()
