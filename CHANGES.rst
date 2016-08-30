@@ -4,6 +4,13 @@ Changelog
 Here you can see the full list of changes between each WTForms-JSON release.
 
 
+0.3.0 (2016-08-30)
+^^^^^^^^^^^^^^^^^^
+
+- Added support for WTForms 3.0
+- Dropped Python 2.6 support
+
+
 0.2.10 (2015-03-28)
 ^^^^^^^^^^^^^^^^^^
 
