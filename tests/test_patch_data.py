@@ -5,17 +5,17 @@ from wtforms import (
     Form,
     FormField,
     IntegerField,
-    TextField
+    StringField,
 )
-from wtforms.validators import Optional, Required
+from wtforms.validators import Optional, DataRequired
 
 from wtforms_json import InvalidData, MultiDict
 
 
 class BooleanTestForm(Form):
     is_active = BooleanField(default=False, validators=[Optional()])
-    is_confirmed = BooleanField(default=True, validators=[Required()])
-    is_private = BooleanField(default=False, validators=[Required()])
+    is_confirmed = BooleanField(default=True, validators=[DataRequired()])
+    is_private = BooleanField(default=False, validators=[DataRequired()])
 
 
 class TestPatchedBooleans(object):
@@ -31,16 +31,16 @@ class TestPatchedBooleans(object):
 
 
 class LocationForm(Form):
-    name = TextField()
+    name = StringField()
     longitude = IntegerField()
     latitude = IntegerField()
 
 
 class EventForm(Form):
-    name = TextField()
+    name = StringField()
     location = FormField(LocationForm)
     attendees = IntegerField()
-    attendee_names = FieldList(TextField())
+    attendee_names = FieldList(StringField())
 
 
 class TestSkipUnknownKeys(object):

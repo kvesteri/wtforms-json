@@ -2,10 +2,14 @@ import collections
 
 import six
 from wtforms import Form
-from wtforms.ext.sqlalchemy.fields import (
-    QuerySelectField,
-    QuerySelectMultipleField
-)
+try:
+    from wtforms.ext.sqlalchemy.fields import (
+        QuerySelectField,
+        QuerySelectMultipleField
+    )
+    HAS_SQLALCHEMY_SUPPORT = True
+except ImportError:
+    HAS_SQLALCHEMY_SUPPORT = False
 from wtforms.fields import (
     _unset_value,
     BooleanField,
@@ -13,7 +17,7 @@ from wtforms.fields import (
     FieldList,
     FileField,
     FormField,
-    TextField
+    StringField
 )
 from wtforms.validators import DataRequired, Optional
 
@@ -187,7 +191,7 @@ def monkey_patch_field_process(func):
             self.form._is_missing = False
             self.form._patch_data = None
 
-        if isinstance(self, TextField) and not isinstance(self, FileField):
+        if isinstance(self, StringField) and not isinstance(self, FileField):
             if self.data is None:
                 self.data = u''
             else:
@@ -264,12 +268,14 @@ def init():
     Form.from_json = from_json
     Form.patch_data = patch_data
     FieldList.patch_data = patch_data
-    QuerySelectField.process_formdata = monkey_patch_process_formdata(
-        QuerySelectField.process_formdata
-    )
-    QuerySelectMultipleField.process_formdata = monkey_patch_process_formdata(
-        QuerySelectMultipleField.process_formdata
-    )
+    if HAS_SQLALCHEMY_SUPPORT:
+        QuerySelectField.process_formdata = monkey_patch_process_formdata(
+            QuerySelectField.process_formdata
+        )
+        QuerySelectMultipleField.process_formdata = \
+            monkey_patch_process_formdata(
+                QuerySelectMultipleField.process_formdata
+            )
     Field.process = monkey_patch_field_process(Field.process)
     FormField.process = monkey_patch_field_process(FormField.process)
     BooleanField.false_values = BooleanField.false_values + (False,)

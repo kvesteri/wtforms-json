@@ -1,10 +1,10 @@
-from wtforms import Form, IntegerField, TextField
+from wtforms import Form, IntegerField, StringField
 from wtforms.validators import Optional
 
 
 class MyForm(Form):
     a = IntegerField(validators=[Optional()])
-    b = TextField()
+    b = StringField()
 
 
 def test_object_defaults():

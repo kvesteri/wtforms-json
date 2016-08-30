@@ -7,7 +7,7 @@ from wtforms import (
     FormField,
     IntegerField,
     SelectMultipleField,
-    TextField
+    StringField,
 )
 
 from wtforms_json import flatten_json, InvalidData
@@ -76,7 +76,7 @@ class TestJsonDecoder(object):
 
     def test_supports_field_list_decoding(self):
         class MyForm(Form):
-            a = FieldList(TextField())
+            a = FieldList(StringField())
 
         assert flatten_json(MyForm, {'a': [1, 2, 3]}) == {
             'a-0': 1,
@@ -97,7 +97,7 @@ class TestJsonDecoder(object):
 
     def test_flatten_dict(self):
         class DeeplyNestedForm(Form):
-            c = TextField()
+            c = StringField()
 
         class NestedForm(Form):
             b = FormField(DeeplyNestedForm)
@@ -132,7 +132,7 @@ class TestJsonDecoder(object):
 
     def test_flatten_formfield_inheritance(self):
         class NestedForm(Form):
-            b = TextField()
+            b = StringField()
 
         class SpecialField(FormField):
             def __init__(self, *args, **kwargs):
@@ -149,7 +149,7 @@ class TestJsonDecoder(object):
         class SpecialField(FieldList):
             def __init__(self, *args, **kwargs):
                 super(SpecialField, self).__init__(
-                    TextField(),
+                    StringField(),
                     *args,
                     **kwargs
                 )
@@ -165,7 +165,7 @@ class TestJsonDecoder(object):
 
     def test_flatten_nested_listfield_and_formfield_inheritance(self):
         class NestedForm(Form):
-            b = TextField()
+            b = StringField()
 
         class SpecialNestedField(FormField):
             def __init__(self, *args, **kwargs):
