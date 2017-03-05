@@ -4,6 +4,13 @@ Changelog
 Here you can see the full list of changes between each WTForms-JSON release.
 
 
+0.3.1 (2017-03-05)
+^^^^^^^^^^^^^^^^^^
+
+- Fixed default value handling for StringField (#49, pull request courtesy noirbizarre)
+- Added py36 to test matrix
+
+
 0.3.0 (2016-08-30)
 ^^^^^^^^^^^^^^^^^^
 
