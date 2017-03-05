@@ -10,8 +10,8 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 
-class Test(Base):
-    __tablename__ = 'test'
+class Fake(Base):
+    __tablename__ = 'fake'
 
     id = sa.Column(sa.BigInteger, autoincrement=True, primary_key=True)
     a = sa.Column(sa.Unicode(100), nullable=True)
@@ -20,9 +20,10 @@ class Test(Base):
     d = sa.Column(sa.Unicode(255), nullable=True)
 
 
-class TestForm(ModelForm):
+class FakeForm(ModelForm):
     class Meta:
-        model = Test
+        model = Fake
+
 
 Base.metadata.create_all(engine)
 # Example
@@ -36,12 +37,12 @@ def create_form_from_json(**kwargs):
             'c': u'Third',
             'd': u'Fourth'
         }
-    return TestForm.from_json(kwargs['json'])
+    return FakeForm.from_json(kwargs['json'])
 
 
 def create_populated_obj_from_json_form():
     form = create_form_from_json()
-    obj = Test()
+    obj = Fake()
     form.populate_obj(obj)
     return obj
 
@@ -59,7 +60,7 @@ def test_init_formdata():
 
 def test_populate_form_from_object():
     obj = create_populated_obj_from_json_form()
-    form = TestForm(obj=obj)
+    form = FakeForm(obj=obj)
     assert len(form.data) == 4
     for key in form.data:
         assert form.data[key] == obj.__dict__[key]

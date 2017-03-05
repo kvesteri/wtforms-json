@@ -4,10 +4,11 @@ python:
   - 3.3
   - 3.4
   - 3.5
+  - 3.6
 env:
   matrix:
     - WTFORMS=WTForms==1.0.5
-    - WTFORMS=WTForms==2.0
+    - WTFORMS=WTForms==2.1
 
 install:
   - "pip install $WTFORMS"

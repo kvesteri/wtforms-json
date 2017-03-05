@@ -167,18 +167,16 @@ def monkey_patch_field_process(func):
         call_original_func = True
         if not isinstance(self, FormField):
 
-            self.is_missing = True
-            if formdata:
-                if self.name in formdata:
-                    if (
-                        len(formdata.getlist(self.name)) == 1 and
-                        formdata.getlist(self.name) == [None]
-                    ):
-                        call_original_func = False
-                        self.data = None
-                    self.is_missing = not bool(formdata.getlist(self.name))
-                else:
-                    self.is_missing = True
+            if formdata and self.name in formdata:
+                if (
+                    len(formdata.getlist(self.name)) == 1 and
+                    formdata.getlist(self.name) == [None]
+                ):
+                    call_original_func = False
+                    self.data = None
+                self.is_missing = not bool(formdata.getlist(self.name))
+            else:
+                self.is_missing = True
 
         if call_original_func:
             func(self, formdata, data=data)
@@ -192,8 +190,11 @@ def monkey_patch_field_process(func):
             self.form._patch_data = None
 
         if isinstance(self, StringField) and not isinstance(self, FileField):
-            if self.data is None:
-                self.data = u''
+            if not self.data:
+                try:
+                    self.data = self.default()
+                except TypeError:
+                    self.data = self.default
             else:
                 self.data = six.text_type(self.data)
 
