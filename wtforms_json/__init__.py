@@ -3,13 +3,20 @@ import collections
 import six
 from wtforms import Form
 try:
-    from wtforms.ext.sqlalchemy.fields import (
+    from wtforms_sqlalchemy.fields import (
         QuerySelectField,
         QuerySelectMultipleField
     )
     HAS_SQLALCHEMY_SUPPORT = True
 except ImportError:
-    HAS_SQLALCHEMY_SUPPORT = False
+    try:
+        from wtforms.ext.sqlalchemy.fields import (
+            QuerySelectField,
+            QuerySelectMultipleField
+        )
+        HAS_SQLALCHEMY_SUPPORT = True
+    except ImportError:
+        HAS_SQLALCHEMY_SUPPORT = False
 from wtforms.fields import (
     _unset_value,
     BooleanField,
