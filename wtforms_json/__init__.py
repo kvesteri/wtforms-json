@@ -28,7 +28,7 @@ from wtforms.fields import (
 )
 from wtforms.validators import DataRequired, Optional
 
-__version__ = '0.3.1'
+__version__ = '0.3.2'
 
 
 class InvalidData(Exception):

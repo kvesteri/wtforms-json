@@ -4,6 +4,12 @@ Changelog
 Here you can see the full list of changes between each WTForms-JSON release.
 
 
+0.3.2 (2017-07-05)
+^^^^^^^^^^^^^^^^^^
+
+- Use wtforms_alchemy for importing QuerySelectField if it is installed (#50, pull request courtesy Lee-W)
+
+
 0.3.1 (2017-03-05)
 ^^^^^^^^^^^^^^^^^^
 
