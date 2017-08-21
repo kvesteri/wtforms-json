@@ -42,7 +42,7 @@ Notice how we are initalizing the form using :meth:`from_json` class  method::
 
 
     from wtforms import Form
-    from wtforms.fields import BooleanField, TextField
+    from wtforms.fields import BooleanField, FormField, TextField
 
 
     class LocationForm(Form):
@@ -53,6 +53,7 @@ Notice how we are initalizing the form using :meth:`from_json` class  method::
     class EventForm(Form):
         name = TextField()
         is_public = BooleanField()
+        location = FormField(LocationForm)
 
 
     json = {
