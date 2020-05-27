@@ -1,4 +1,4 @@
-import collections
+from collections import abc
 
 import six
 from wtforms import Form
@@ -57,7 +57,7 @@ def flatten_json(
         >>> flatten_json(MyForm, {'a': {'b': 'c'}})
         {'a-b': 'c'}
     """
-    if not isinstance(json, collections.Mapping):
+    if not isinstance(json, abc.Mapping):
         raise InvalidData(
             u'This function only accepts dict-like data structures.'
         )
@@ -81,7 +81,7 @@ def flatten_json(
                 raise InvalidData(u"Key '%s' is not valid field class." % key)
 
         new_key = parent_key + separator + key if parent_key else key
-        if isinstance(value, collections.MutableMapping):
+        if isinstance(value, abc.MutableMapping):
             if issubclass(field_class, FormField):
                 nested_form_class = unbound_field.bind(Form(), '').form_class
                 items.extend(
@@ -287,3 +287,4 @@ def init():
     Field.process = monkey_patch_field_process(Field.process)
     FormField.process = monkey_patch_field_process(FormField.process)
     BooleanField.false_values = BooleanField.false_values + (False,)
+
