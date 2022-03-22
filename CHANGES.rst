@@ -4,6 +4,12 @@ Changelog
 Here you can see the full list of changes between each WTForms-JSON release.
 
 
+0.3.4 (2022-02-22)
+^^^^^^^^^^^^^^^^^^
+
+- Added Python 3.10 support (#61, pull request courtesy keaysma)
+
+
 0.3.3 (2017-07-07)
 ^^^^^^^^^^^^^^^^^^
 
