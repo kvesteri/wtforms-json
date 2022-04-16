@@ -4,6 +4,12 @@ Changelog
 Here you can see the full list of changes between each WTForms-JSON release.
 
 
+0.3.5 (2022-04-16)
+^^^^^^^^^^^^^^^^^^
+
+- Added support for arbitrary kwargs when monkey patching Field.process (#60, pull request courtesy alanhamlett)
+
+
 0.3.4 (2022-02-22)
 ^^^^^^^^^^^^^^^^^^
 
